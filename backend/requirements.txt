@@ -1,0 +1,9 @@
+Django==4.1.1
+django-cors-headers==3.13.0
+django-crum==0.7.9
+djangorestframework==3.14.0
+djangorestframework-simplejwt
+djoser
+pandas
+social-auth-app-django
+django-debug-toolbar
