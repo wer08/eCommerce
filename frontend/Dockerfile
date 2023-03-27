@@ -5,7 +5,8 @@ WORKDIR /frontend
 COPY . .
 
 RUN npm install
+RUN npm install -g vite
 
-EXPOSE 3000
+EXPOSE 5173
 
 CMD ["npm", "run", "dev"]
