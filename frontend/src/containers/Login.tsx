@@ -4,12 +4,12 @@ import { Link, Navigate } from "react-router-dom";
 
 const Login = () => {
     const [formData, setFormData] = useState({
-        login: "",
+        username: "",
         password: ""
     })
     const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-    const { login, password } = formData
+    const { username, password } = formData
     const onChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
         setFormData({...formData, [e.target.name]: e.target.value})
     }
@@ -51,7 +51,7 @@ const Login = () => {
             <p>Sign into you account</p>
             <form onSubmit={e => onSubmit(e)}>
                 <div className="form-group">
-                    <input className="form-control mb-2" type='email' placeholder="Email" name="email" value={login} onChange={e=>onChange(e)} required />
+                    <input className="form-control mb-2" type='text' placeholder="Username" name="username" value={username} onChange={e=>onChange(e)} required />
                 </div>
                 <div className="form-group">
                     <input className="form-control mb-2" type='password' placeholder="Password" name="password" minLength={6} value={password} onChange={e=>onChange(e)} required />
