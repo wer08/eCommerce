@@ -1,5 +1,8 @@
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { text } from "@fortawesome/fontawesome-svg-core";
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
@@ -61,6 +64,7 @@ const Navbar = () => {
                         </li>
                         {isAuthenticated ? authLinks() : guestLink()}
                     </ul>
+                    {isAuthenticated && <FontAwesomeIcon className="navbar-text ms-auto me-5" icon={faCartShopping} />}
                 </div>
             </nav>
             {redirect ? afterLogout() : <></>}
