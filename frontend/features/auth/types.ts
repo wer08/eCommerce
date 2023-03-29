@@ -1,7 +1,7 @@
 // Define a type for the slice state
 export interface authState {
-    access: string,
-    refresh: string,
+    access: string | null,
+    refresh: string | null,
     isAuthenticated: boolean,
     status: string,
     error: string | null | undefined

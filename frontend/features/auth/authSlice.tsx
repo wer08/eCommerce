@@ -2,15 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TPayloadLogin, TPayloadActivate} from './types'
+import type { authState, TPayloadLogin, TPayloadActivate, User} from './types'
 
 
 
 
 // Define the initial state using that type
 const initialState: authState = {
-    access: "",
-    refresh: "",
+    access: localStorage.getItem('access'),
+    refresh: localStorage.getItem('refresh'),
     isAuthenticated: false,
     status: 'idle',
     error: null,
@@ -35,6 +35,30 @@ export const login = createAsyncThunk('auth/login', async (payload:TPayloadLogin
   }
 })
 
+export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', async () => {
+  if (localStorage.getItem('access'))
+  {
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      }
+    };
+    const body = JSON.stringify({
+      token: localStorage.getItem('access')
+    })
+
+    try{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/jwt/verify/`,body,config)
+      if (res.data.code === 'token_not_valid'){
+        throw new Error('token_not_valid')
+      }
+    }catch(error: any){
+      throw error.message
+    }
+  }
+})
+
 export const activate = createAsyncThunk('auth/activate', async (payload:TPayloadActivate) => {
   const config = {
     headers: {
@@ -50,6 +74,26 @@ export const activate = createAsyncThunk('auth/activate', async (payload:TPayloa
   }
 }) 
 
+export const loadUser = createAsyncThunk('auth/loadUser', async () => {
+  if (localStorage.getItem('access'))
+  {
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('access')}`,
+          'Accept': 'application/json',
+      }
+    };
+    try{
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/users/me/`,config)
+      return res.data
+
+    }catch(error: any){
+      throw error.message
+    }
+  }
+})
+
 export const authSlice = createSlice({
   name: 'auth',
   // `createSlice` will infer the state type from the `initialState` argument
@@ -62,7 +106,7 @@ export const authSlice = createSlice({
       .addCase(login.pending, (state,action) => {
           state.status = 'loading'
       })
-      .addCase(login.fulfilled, (state,action: PayloadAction<authState>) => {
+      .addCase(login.fulfilled, (state,action) => {
         localStorage.setItem('access',action.payload.access);
         localStorage.setItem('refresh',action.payload.refresh);
         state.status = 'succeeded'
@@ -76,13 +120,12 @@ export const authSlice = createSlice({
         localStorage.removeItem('refresh');
         state.status = "failed"   
         state.isAuthenticated = false
-        state.access = ""
-        state.refresh = ""
+        state.access = null
+        state.refresh = null
         state.user
         state.error = action.error.message
         state.user = null
       })
-    builder
       .addCase(activate.pending, (state,action) => {
           state.status = 'loading'
       })
@@ -92,6 +135,32 @@ export const authSlice = createSlice({
       .addCase(activate.rejected, (state,action) => {
           state.status = 'failed'
           state.error = action.error.message
+      })
+      .addCase(loadUser.pending, (state,action) => {
+        state.status = 'loading'
+      })
+      .addCase(loadUser.fulfilled, (state,action) => {
+          state.status = 'succeeded'
+          state.user = action.payload
+      })
+      .addCase(loadUser.rejected, (state,action) => {
+          state.status = 'failed'
+          state.error = action.error.message
+          state.access = ""
+          state.refresh = ""
+      })
+      .addCase(checkAuthentication.pending, (state,action) => {
+        state.status = 'loading'
+      })
+      .addCase(checkAuthentication.fulfilled, (state,action) => {
+          state.status = 'succeeded'
+          state.isAuthenticated = true
+      })
+      .addCase(checkAuthentication.rejected, (state,action) => {
+          state.status = 'failed'
+          state.error = action.error.message
+          state.isAuthenticated = false
+
       })
     
   }
