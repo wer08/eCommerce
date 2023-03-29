@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -165,3 +166,10 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': True,
     'SERIALIZERS': {},
 }
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',
+     'http://localhost:5173'
+]
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
