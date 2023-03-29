@@ -10,9 +10,10 @@ const Home = () => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
 
-  useEffect(()=>{
+  useEffect(()=> {
     dispatch(loadUser())
   },[])
+  
 
   return (
     <div className="App">

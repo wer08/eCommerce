@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
@@ -94,6 +94,24 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   }
 })
 
+export const passwordReset = createAsyncThunk('auth/resetPassword', async (email: string) => {
+  const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  }
+  const body = JSON.stringify({
+      email: email
+  })
+  try{
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/users/reset_password/`,body, config);
+  }catch(error:any){
+    throw error.message
+  }
+})
+
+
+
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -112,9 +130,10 @@ export const authSlice = createSlice({
   },
   extraReducers(builder){
     builder
-      .addCase(login.pending, (state,action) => {
+      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending), (state,action) => {
           state.status = 'loading'
       })
+    builder  
       .addCase(login.fulfilled, (state,action) => {
         localStorage.setItem('access',action.payload.access);
         localStorage.setItem('refresh',action.payload.refresh);
@@ -135,19 +154,16 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-      .addCase(activate.pending, (state,action) => {
-          state.status = 'loading'
-      })
-      .addCase(activate.fulfilled, (state,action) => {
+    builder
+      .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled), (state,action) => {
           state.status = 'succeeded'
       })
-      .addCase(activate.rejected, (state,action) => {
+    builder
+      .addMatcher(isAnyOf(activate.rejected,passwordReset.rejected), (state,action) => {
           state.status = 'failed'
           state.error = action.error.message
       })
-      .addCase(loadUser.pending, (state,action) => {
-        state.status = 'loading'
-      })
+    builder
       .addCase(loadUser.fulfilled, (state,action) => {
           state.status = 'succeeded'
           state.user = action.payload
@@ -157,9 +173,6 @@ export const authSlice = createSlice({
           state.error = action.error.message
           state.access = ""
           state.refresh = ""
-      })
-      .addCase(checkAuthentication.pending, (state,action) => {
-        state.status = 'loading'
       })
       .addCase(checkAuthentication.fulfilled, (state,action) => {
           state.status = 'succeeded'
