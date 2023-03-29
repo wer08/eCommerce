@@ -94,12 +94,21 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   }
 })
 
+
 export const authSlice = createSlice({
   name: 'auth',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-
+    logout: (state) => {
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      state.status = "idle";
+      state.isAuthenticated = false;
+      state.access = null
+      state.refresh = null
+      state.user = null
+    }
   },
   extraReducers(builder){
     builder
@@ -160,14 +169,19 @@ export const authSlice = createSlice({
           state.status = 'failed'
           state.error = action.error.message
           state.isAuthenticated = false
-
       })
     
   }
 })
 
+//Action creator 
+export const {logout} = authSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const getIsAuthenticated = (state: RootState) => state.auth.isAuthenticated
+export const getUser = (state:RootState) => state.auth.user
+export const getStatus = (state:RootState) => state.auth.status
+export const getError = (state:RootState) => state.auth.error
+
 
 export default authSlice.reducer

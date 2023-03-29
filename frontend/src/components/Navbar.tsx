@@ -2,14 +2,17 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { text } from "@fortawesome/fontawesome-svg-core";
+import { getIsAuthenticated, logout } from "../../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(true)
+    const isAuthenticated = useAppSelector(getIsAuthenticated)
+    const dispatch = useAppDispatch()
 
     const handleLogout = () => {
         setRedirect(true);
+        dispatch(logout())
     };
 
     const guestLink = () => {
