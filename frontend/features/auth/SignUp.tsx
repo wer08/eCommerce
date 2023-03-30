@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import {useAppDispatch,useAppSelector} from '../../hooks'
 import { TSignUpFormData } from "./types";
-import{useNavigate} from 'react-router-dom';
+import{Link, useNavigate} from 'react-router-dom';
 import { getIsAuthenticated } from "./authSlice";
 import { signUp } from "./authSlice";
+import axios from "axios";
 
 const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
@@ -46,6 +47,25 @@ const SignUp = () => {
         setFormData({...formData, [field]: e.target.value})
     }
 
+    const continueWithGoogle = async () => {
+        try{
+            const res = await axios.get(`http://localhost:8000/auth/o/google-oauth2/?redirect_uri=http://localhost:5173/google`)
+            window.location.replace(res.data.authorization_url)
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    const continueWithFacebook = async () => {
+        try{
+            const res = await axios.get(`http://localhost:8000/auth/o/facebook/?redirect_uri=http://localhost:5173/facebook`)
+            window.location.replace(res.data.authorization_url)
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+
     return ( 
         <div className="container mt-5">
             <h1>Sign Up</h1>
@@ -69,7 +89,22 @@ const SignUp = () => {
                 <div className="form-group">
                     <input type="password" className="form-control mb-2" placeholder="Confirm Password" minLength={6} value={rePassword} name='rePassword' onChange={e=>onChange(e)} required/>
                 </div>
-            </form>
+                <button className="btn btn-primary" type='submit'>Sign Up</button>
+                </form>
+                <div>
+                    <button className="btn btn-danger mt-3" onClick={continueWithGoogle}>
+                        Continue with Google
+                    </button>
+                </div>
+                <div>
+                    <button className="btn btn-primary mt-3" onClick={continueWithFacebook}>
+                        Continue with Facebook
+                    </button>
+                </div>
+                <p className="mt-3">
+                    Already an user ? <Link to='/login'>Sign In</Link>
+                </p>
+           
         </div>
      );
 }

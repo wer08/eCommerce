@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, User} from './types'
+import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, TArgSocialAuthenticate, TSocialDetail, User} from './types'
 
 
 
@@ -76,6 +76,57 @@ export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', 
     throw new Error('no access token');
   }
 
+})
+
+export const facebookAuthenticate = createAsyncThunk('auth/facebookAuthentication', async (arg:TArgSocialAuthenticate)=>{
+  const {state,code} = arg;
+  if (state && code && !localStorage.getItem('access'))
+  {
+    const config = {
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    const details: TSocialDetail = {
+      'state': state,
+      'code': code
+    };
+    const formBody = Object.keys(details).map(key => encodeURIComponent(key)+"="+encodeURIComponent(details[key])).join('&');
+    try{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/o/facebook/?${formBody}`,config)
+      return res.data
+    }catch(error:any){
+      throw error.message
+    }
+  }
+  else{
+    throw new Error('no credentials')
+  }
+})
+export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', async (arg:TArgSocialAuthenticate)=>{
+  const {state,code} = arg;
+  if (state && code && !localStorage.getItem('access'))
+  {
+    const config = {
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    const details: TSocialDetail = {
+      'state': state,
+      'code': code
+    };
+    const formBody = Object.keys(details).map(key => encodeURIComponent(key)+"="+encodeURIComponent(details[key])).join('&');
+    try{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/o/google-oauth2/?${formBody}`,config)
+      return res.data
+    }catch(error:any){
+      throw error.message
+    }
+  }
+  else{
+    throw new Error('no credentials')
+  }
 })
 
 export const activate = createAsyncThunk('auth/activate', async (arg:TArgActivate) => {
@@ -173,15 +224,6 @@ export const authSlice = createSlice({
   extraReducers(builder){
 
     builder  
-      .addCase(login.fulfilled, (state,action) => {
-        localStorage.setItem('access',action.payload.access);
-        localStorage.setItem('refresh',action.payload.refresh);
-        state.status = 'succeeded'
-        state.isAuthenticated = true
-        state.access = action.payload.access
-        state.refresh = action.payload.refresh
-        state.error = null
-      })
       .addCase(loadUser.fulfilled, (state,action) => {
           state.status = 'succeeded'
           state.user = action.payload
@@ -206,6 +248,15 @@ export const authSlice = createSlice({
         state.isAuthenticated = false
       })
     builder
+      .addMatcher(isAnyOf(login.fulfilled,facebookAuthenticate.fulfilled,googleAuthenticate.fulfilled), (state,action) => {
+        localStorage.setItem('access',action.payload.access);
+        localStorage.setItem('refresh',action.payload.refresh);
+        state.status = 'succeeded'
+        state.isAuthenticated = true
+        state.access = action.payload.access
+        state.refresh = action.payload.refresh
+        state.error = null
+      })
       .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled, passwordResetConfirm.fulfilled), (state,action) => {
           state.status = 'succeeded'
       })
@@ -213,7 +264,7 @@ export const authSlice = createSlice({
           state.status = 'failed'
           state.error = action.error.message
       })
-      .addMatcher(isAnyOf(login.rejected,signUp.rejected),(state,action)=>{
+      .addMatcher(isAnyOf(login.rejected,signUp.rejected,facebookAuthenticate.rejected,googleAuthenticate.rejected),(state,action)=>{
         localStorage.removeItem('access');
         localStorage.removeItem('refresh');
         state.status = "failed"   
@@ -224,7 +275,7 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending), (state,action) => {
+      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending, facebookAuthenticate.pending, googleAuthenticate.pending), (state,action) => {
           state.status = 'loading'
       })
 

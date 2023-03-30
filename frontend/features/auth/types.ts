@@ -44,7 +44,14 @@ export type TSignUpFormData = {
   lastName: string,
   password: string,
   rePassword: string
-
-
+}
+export type TArgSocialAuthenticate = {
+  state: string,
+  code: string
+}
+export type TSocialDetail = {
+  state: string,
+  code: string;
+  [key: string]: any;
 }
 
