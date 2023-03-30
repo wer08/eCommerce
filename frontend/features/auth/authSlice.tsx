@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TPayloadLogin, TPayloadActivate, User} from './types'
+import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, User} from './types'
 
 
 
@@ -17,13 +17,13 @@ const initialState: authState = {
     user: null
 }
 
-export const login = createAsyncThunk('auth/login', async (payload:TPayloadLogin) => {
+export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const config = {
     headers: {
         'Content-Type': 'application/json',
     } 
     };
-  const {username,password} = payload
+  const {username,password} = arg
 
   const body = JSON.stringify({username, password});
 
@@ -59,13 +59,13 @@ export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', 
   }
 })
 
-export const activate = createAsyncThunk('auth/activate', async (payload:TPayloadActivate) => {
+export const activate = createAsyncThunk('auth/activate', async (arg:TArgActivate) => {
   const config = {
     headers: {
         'Content-Type': 'application/json'
     }
   }
-  const {uid,token} = payload
+  const {uid,token} = arg
   const body = JSON.stringify({uid,token});
   try{
     await axios.post(`${import.meta.env.VITE_API_URL}/auth/users/activation/`,body,config)
@@ -110,6 +110,29 @@ export const passwordReset = createAsyncThunk('auth/resetPassword', async (email
   }
 })
 
+export const passwordResetConfirm = createAsyncThunk('auth/resetPasswordConfirm', async (arg: TArgPassConfirm) => {
+  const {uid,token,newPassword,reNewPassword} = arg;
+  const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  }
+  const body = JSON.stringify({
+      uid: uid,
+      token: token,
+      new_password: newPassword,
+      re_new_password: reNewPassword
+  })
+  try{
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/users/reset_password_confirm/`,body,config)
+    return res.data
+
+  }catch(error:any){
+    throw error.message
+  }
+
+})
+
 
 
 
@@ -129,10 +152,7 @@ export const authSlice = createSlice({
     }
   },
   extraReducers(builder){
-    builder
-      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending), (state,action) => {
-          state.status = 'loading'
-      })
+
     builder  
       .addCase(login.fulfilled, (state,action) => {
         localStorage.setItem('access',action.payload.access);
@@ -154,16 +174,6 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-    builder
-      .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled), (state,action) => {
-          state.status = 'succeeded'
-      })
-    builder
-      .addMatcher(isAnyOf(activate.rejected,passwordReset.rejected), (state,action) => {
-          state.status = 'failed'
-          state.error = action.error.message
-      })
-    builder
       .addCase(loadUser.fulfilled, (state,action) => {
           state.status = 'succeeded'
           state.user = action.payload
@@ -183,6 +193,20 @@ export const authSlice = createSlice({
           state.error = action.error.message
           state.isAuthenticated = false
       })
+    builder
+      .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled, passwordResetConfirm.fulfilled), (state,action) => {
+          state.status = 'succeeded'
+      })
+    builder
+      .addMatcher(isAnyOf(activate.rejected,passwordReset.rejected, passwordResetConfirm.rejected), (state,action) => {
+          state.status = 'failed'
+          state.error = action.error.message
+      })
+    builder
+      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending), (state,action) => {
+          state.status = 'loading'
+      })
+
     
   }
 })

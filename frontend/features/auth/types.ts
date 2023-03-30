@@ -8,14 +8,20 @@ export interface authState {
     user: User | null
   }
   
-export type TPayloadLogin = {
+export type TArgLogin = {
     username: string,
     password: string
   }
 
-export type TPayloadActivate = {
+export type TArgActivate = {
     uid: string,
     token: string
+}
+export type TArgPassConfirm = {
+  uid: string,
+  token: string,
+  newPassword: string,
+  reNewPassword: string
 }
 export type User = {
     username: string,
