@@ -156,6 +156,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'eCommerce.User'
+
 DJOSER = {
     'USER_AUTHENTICATION_RULE': 'djoser.auth.jwt.authentication.JWTAuthentication',
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
@@ -164,7 +166,12 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SET_PASSWORD_RETYPE': True,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'user_create': 'eCommerce.serializers.UserCreateSerializer',
+        'user': 'eCommerce.serializers.UserCreateSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'current_user': 'eCommerce.serializers.UserCreateSerializer' 
+    }
 }
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',

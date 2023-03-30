@@ -39,7 +39,7 @@ const Login = () => {
 
     // Rendering the login form, along with links to signup and reset password pages
     return ( 
-        <div className="container mt-5">
+        <div className="container mt-5 form">
             <h1>Sign In</h1>
             <p>Sign into you account</p>
             <form onSubmit={e => onSubmit(e)}>

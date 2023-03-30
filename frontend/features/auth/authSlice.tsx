@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, User} from './types'
+import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, User} from './types'
 
 
 
@@ -16,6 +16,21 @@ const initialState: authState = {
     error: null,
     user: null
 }
+
+export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
+  const {username,email,firstName,lastName,password,rePassword} = arg;
+  const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  }
+  const body = JSON.stringify({username,email,firstName,lastName,password,rePassword}); 
+  try{
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/users/`,body,config)
+  }catch(error:any){
+    throw error.message
+  }
+})
 
 export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const config = {
@@ -163,17 +178,6 @@ export const authSlice = createSlice({
         state.refresh = action.payload.refresh
         state.error = null
       })
-      .addCase(login.rejected, (state,action) => {
-        localStorage.removeItem('access');
-        localStorage.removeItem('refresh');
-        state.status = "failed"   
-        state.isAuthenticated = false
-        state.access = null
-        state.refresh = null
-        state.user
-        state.error = action.error.message
-        state.user = null
-      })
       .addCase(loadUser.fulfilled, (state,action) => {
           state.status = 'succeeded'
           state.user = action.payload
@@ -193,16 +197,29 @@ export const authSlice = createSlice({
           state.error = action.error.message
           state.isAuthenticated = false
       })
+      .addCase(signUp.fulfilled,(state,action)=>{
+        state.status = 'success'
+        state.isAuthenticated = false
+      })
     builder
       .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled, passwordResetConfirm.fulfilled), (state,action) => {
           state.status = 'succeeded'
       })
-    builder
       .addMatcher(isAnyOf(activate.rejected,passwordReset.rejected, passwordResetConfirm.rejected), (state,action) => {
           state.status = 'failed'
           state.error = action.error.message
       })
-    builder
+      .addMatcher(isAnyOf(login.rejected,signUp.rejected),(state,action)=>{
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        state.status = "failed"   
+        state.isAuthenticated = false
+        state.access = null
+        state.refresh = null
+        state.user
+        state.error = action.error.message
+        state.user = null
+      })
       .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending), (state,action) => {
           state.status = 'loading'
       })
