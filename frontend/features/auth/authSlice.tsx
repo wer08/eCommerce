@@ -72,6 +72,10 @@ export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', 
       throw error.message
     }
   }
+  else{
+    throw new Error('no access token');
+  }
+
 })
 
 export const activate = createAsyncThunk('auth/activate', async (arg:TArgActivate) => {

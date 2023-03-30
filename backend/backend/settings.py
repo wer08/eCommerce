@@ -56,8 +56,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -137,6 +139,12 @@ REST_FRAMEWORK = {
     ),
 }
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
@@ -166,6 +174,8 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SET_PASSWORD_RETYPE': True,
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:5173/google','http://localhost:5173/facebook'],
     'SERIALIZERS': {
         'user_create': 'eCommerce.serializers.UserCreateSerializer',
         'user': 'eCommerce.serializers.UserCreateSerializer',
@@ -173,6 +183,30 @@ DJOSER = {
         'current_user': 'eCommerce.serializers.UserCreateSerializer' 
     }
 }
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '610673970685-ssh27o6b808ht7j0mdvnudtpqq54ra1s.apps.googleusercontent.com'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'openid',
+]
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
+
+
+SOCIAL_AUTH_FACEBOOK_KEY = '742296670606805'
+
+SOCIAL_AUTH_FACEBOOK_SECRET = '7ce70ef8c063bb642b99be42a7126c21'
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = [
+    'email'
+]
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'email, first_name, last_name'
+}
+
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',
      'http://localhost:5173'

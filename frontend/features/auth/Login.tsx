@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"; // Importing useState hook from react
 import { Link, Navigate } from "react-router-dom"; // Importing Link and Navigate components from react-router-dom
-import { getIsAuthenticated, login} from "./authSlice"; // Importing login action creator from authSlice
+import { getIsAuthenticated, getUser, login} from "./authSlice"; // Importing login action creator from authSlice
 import { useAppDispatch, useAppSelector } from "../../hooks"; // Importing custom hooks
 
 const Login = () => {
@@ -10,8 +10,6 @@ const Login = () => {
         password: ""
     })
     const isAuthenticated = useAppSelector(getIsAuthenticated)
-
-
 
     // Using useAppDispatch hook to create a dispatch function
     const dispatch = useAppDispatch()
