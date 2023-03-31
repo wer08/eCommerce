@@ -8,3 +8,6 @@ pandas
 social-auth-app-django
 django-debug-toolbar
 psycopg2
+dj-rest-auth
+dj-rest-auth[with_social]
+python-jose[cryptography]

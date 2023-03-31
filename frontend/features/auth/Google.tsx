@@ -20,16 +20,17 @@ const Google = () => {
         {
             dispatch(googleAuthenticate({state,code}))
         }
+        if(isAuthenticated){
+            navigate('/')
+        }
+        else{
+            navigate('/login')
+        }
 
 
     },[location])
 
-    if(isAuthenticated){
-        navigate('/')
-    }
-    else{
-        navigate('/login')
-    }
+
 
     return (
         <>

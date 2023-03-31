@@ -1,7 +1,6 @@
 // Define a type for the slice state
 export interface authState {
     access: string | null,
-    refresh: string | null,
     isAuthenticated: boolean,
     status: string,
     error: string | null | undefined
@@ -22,8 +21,7 @@ export type TArgSignUp = {
 }
 
 export type TArgActivate = {
-    uid: string,
-    token: string
+    key: string
 }
 export type TArgPassConfirm = {
   uid: string,

@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
 import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, TArgSocialAuthenticate, TSocialDetail, User} from './types'
+axios.defaults.withCredentials = true;
 
 
 
@@ -10,7 +11,6 @@ import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, T
 // Define the initial state using that type
 const initialState: authState = {
     access: localStorage.getItem('access'),
-    refresh: localStorage.getItem('refresh'),
     isAuthenticated: false,
     status: 'idle',
     error: null,
@@ -43,7 +43,7 @@ export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const body = JSON.stringify({username, password});
 
   try{
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/jwt/create/`,body,config);
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/login/`,body,config);
     return response.data
   }catch(error: any){
     throw error.message;
@@ -64,7 +64,7 @@ export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', 
     })
 
     try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/jwt/verify/`,body,config)
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/token/verify/ `,body,config)
       if (res.data.code === 'token_not_valid'){
         throw new Error('token_not_valid')
       }
@@ -121,7 +121,9 @@ export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', 
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/o/google-oauth2/?${formBody}`,config)
       return res.data
     }catch(error:any){
+      console.log(error)
       throw error.message
+
     }
   }
   else{
@@ -135,34 +137,14 @@ export const activate = createAsyncThunk('auth/activate', async (arg:TArgActivat
         'Content-Type': 'application/json'
     }
   }
-  const {uid,token} = arg
-  const body = JSON.stringify({uid,token});
+  const {key} = arg
+  const body = JSON.stringify({key});
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/auth/users/activation/`,body,config)
+    await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/registration/verify-email/`,body,config)
   }catch(error: any){
     throw error.message
   }
 }) 
-
-export const loadUser = createAsyncThunk('auth/loadUser', async () => {
-  if (localStorage.getItem('access'))
-  {
-    const config = {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `JWT ${localStorage.getItem('access')}`,
-          'Accept': 'application/json',
-      }
-    };
-    try{
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/users/me/`,config)
-      return res.data
-
-    }catch(error: any){
-      throw error.message
-    }
-  }
-})
 
 export const passwordReset = createAsyncThunk('auth/resetPassword', async (email: string) => {
   const config = {
@@ -217,23 +199,13 @@ export const authSlice = createSlice({
       state.status = "idle";
       state.isAuthenticated = false;
       state.access = null
-      state.refresh = null
       state.user = null
     }
   },
   extraReducers(builder){
 
     builder  
-      .addCase(loadUser.fulfilled, (state,action) => {
-          state.status = 'succeeded'
-          state.user = action.payload
-      })
-      .addCase(loadUser.rejected, (state,action) => {
-          state.status = 'failed'
-          state.error = action.error.message
-          state.access = ""
-          state.refresh = ""
-      })
+
       .addCase(checkAuthentication.fulfilled, (state,action) => {
           state.status = 'succeeded'
           state.isAuthenticated = true
@@ -249,12 +221,11 @@ export const authSlice = createSlice({
       })
     builder
       .addMatcher(isAnyOf(login.fulfilled,facebookAuthenticate.fulfilled,googleAuthenticate.fulfilled), (state,action) => {
-        localStorage.setItem('access',action.payload.access);
-        localStorage.setItem('refresh',action.payload.refresh);
+        localStorage.setItem('access',action.payload.access_token);
         state.status = 'succeeded'
         state.isAuthenticated = true
         state.access = action.payload.access
-        state.refresh = action.payload.refresh
+        state.user = action.payload.user
         state.error = null
       })
       .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled, passwordResetConfirm.fulfilled), (state,action) => {
@@ -266,16 +237,14 @@ export const authSlice = createSlice({
       })
       .addMatcher(isAnyOf(login.rejected,signUp.rejected,facebookAuthenticate.rejected,googleAuthenticate.rejected),(state,action)=>{
         localStorage.removeItem('access');
-        localStorage.removeItem('refresh');
         state.status = "failed"   
         state.isAuthenticated = false
         state.access = null
-        state.refresh = null
-        state.user
+        state.user = null
         state.error = action.error.message
         state.user = null
       })
-      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending, facebookAuthenticate.pending, googleAuthenticate.pending), (state,action) => {
+      .addMatcher(isAnyOf(login.pending,activate.pending,checkAuthentication.pending, passwordReset.pending, passwordResetConfirm.pending, facebookAuthenticate.pending, googleAuthenticate.pending), (state,action) => {
           state.status = 'loading'
       })
 

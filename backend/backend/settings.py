@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'rest_framework',
-    'djoser',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -51,7 +50,22 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'corsheaders',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'dj_rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 ]
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'my-app-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+}
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -166,46 +180,46 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'eCommerce.User'
 
-DJOSER = {
-    'USER_AUTHENTICATION_RULE': 'djoser.auth.jwt.authentication.JWTAuthentication',
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'USER_CREATE_PASSWORD_RETYPE':True,
-    'SET_PASSWORD_RETYPE': True,
-    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:5173/google','http://localhost:5173/facebook'],
-    'SERIALIZERS': {
-        'user_create': 'eCommerce.serializers.UserCreateSerializer',
-        'user': 'eCommerce.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-        'current_user': 'eCommerce.serializers.UserCreateSerializer' 
-    }
-}
+# DJOSER = {
+#     'USER_AUTHENTICATION_RULE': 'djoser.auth.jwt.authentication.JWTAuthentication',
+#     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+#     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': '#/activate/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'USER_CREATE_PASSWORD_RETYPE':True,
+#     'SET_PASSWORD_RETYPE': True,
+#     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+#     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:5173/google','http://localhost:5173/facebook'],
+#     'SERIALIZERS': {
+#         'user_create': 'eCommerce.serializers.UserCreateSerializer',
+#         'user': 'eCommerce.serializers.UserCreateSerializer',
+#         'user_delete': 'djoser.serializers.UserDeleteSerializer',
+#         'current_user': 'eCommerce.serializers.UserCreateSerializer' 
+#     }
+# }
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '610673970685-ssh27o6b808ht7j0mdvnudtpqq54ra1s.apps.googleusercontent.com'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '610673970685-ssh27o6b808ht7j0mdvnudtpqq54ra1s.apps.googleusercontent.com'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-    'openid',
-]
-SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+#     'https://www.googleapis.com/auth/userinfo.email',
+#     'https://www.googleapis.com/auth/userinfo.profile',
+#     'openid',
+# ]
+# SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
 
 
-SOCIAL_AUTH_FACEBOOK_KEY = '742296670606805'
+# SOCIAL_AUTH_FACEBOOK_KEY = '742296670606805'
 
-SOCIAL_AUTH_FACEBOOK_SECRET = '7ce70ef8c063bb642b99be42a7126c21'
+# SOCIAL_AUTH_FACEBOOK_SECRET = '7ce70ef8c063bb642b99be42a7126c21'
 
-SOCIAL_AUTH_FACEBOOK_SCOPE = [
-    'email'
-]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'email, first_name, last_name'
-}
+# SOCIAL_AUTH_FACEBOOK_SCOPE = [
+#     'email'
+# ]
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+#     'fields': 'email, first_name, last_name'
+# }
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.open_id.OpenIdAuth',
@@ -221,3 +235,8 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
+
+ACTIVATION_URL = 'http://localhost:5173/verify-email/{key}/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://localhost:5173/'
+ACCOUNT_ADAPTER = 'eCommerce.adapter.DefaultAccountAdapterCustom'
+URL_FRONT = 'http://localhost:5173/'

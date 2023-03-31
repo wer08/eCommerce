@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { activate } from "./authSlice";
 import { useParams, useNavigate } from "react-router-dom";
-import {connect} from 'react-redux';
 import React from "react";
-
+import { useAppDispatch } from "../../hooks";
 const Activate = () => {
     const [activated, setActivated] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const routeParams = useParams();
 
 
     const handleClick = () => {
-        const uid = routeParams.uid;
-        const token = routeParams.token;
-        uid && token && activate({uid,token});
+        const key = routeParams.key;
+        key && dispatch(activate({key}));
         setActivated(true)
 
     }
