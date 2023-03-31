@@ -55,8 +55,8 @@ const Navbar = () => {
 
     return ( 
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary p-2">
-                <Link className="navbar-brand" to="/">Communicator</Link>
+            <nav className="navbar navbar-expand-lg navbar-dark p-2" style={{backgroundColor: '#cf9013'}}>
+                <Link className="navbar-brand" to="/">eCommerce</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>

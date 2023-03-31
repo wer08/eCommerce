@@ -5,6 +5,7 @@ import{Link, useNavigate} from 'react-router-dom';
 import { getIsAuthenticated } from "./authSlice";
 import { signUp } from "./authSlice";
 import axios from "axios";
+import GoogleButton from "react-google-button";
 
 const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
@@ -92,9 +93,8 @@ const SignUp = () => {
                 <button className="btn btn-primary" type='submit'>Sign Up</button>
                 </form>
                 <div>
-                    <button className="btn btn-danger mt-3" onClick={continueWithGoogle}>
-                        Continue with Google
-                    </button>
+                    <GoogleButton type='dark' className="btn btn-danger mt-3" onClick={continueWithGoogle} />
+  
                 </div>
                 <div>
                     <button className="btn btn-primary mt-3" onClick={continueWithFacebook}>
