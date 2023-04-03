@@ -6,6 +6,7 @@ import { getIsAuthenticated } from "./authSlice";
 import { signUp } from "./authSlice";
 import axios from "axios";
 import GoogleButton from "react-google-button";
+import { config } from "@fortawesome/fontawesome-svg-core";
 
 const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
@@ -37,8 +38,8 @@ const SignUp = () => {
                 email: email,
                 firstName: firstName,
                 lastName: lastName,
-                password: password,
-                rePassword: rePassword
+                password1: password,
+                password2: rePassword
             }))
         }
     }
@@ -49,8 +50,11 @@ const SignUp = () => {
     }
 
     const continueWithGoogle = async () => {
+
+        const URL = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https://localhost:5173/google&prompt=consent&response_type=token&client_id=726797131514-gpuj32fjc3on3l0man3krslmp967nldq.apps.googleusercontent.com&scope=openid%20email%20profile`
         try{
-            const res = await axios.get(`http://localhost:8000/auth/o/google-oauth2/?redirect_uri=http://localhost:5173/google`)
+            const res = await axios.get(URL)
+            console.log(res)
             window.location.replace(res.data.authorization_url)
         }catch(e){
             console.log(e)
@@ -59,8 +63,8 @@ const SignUp = () => {
 
     const continueWithFacebook = async () => {
         try{
-            const res = await axios.get(`http://localhost:8000/auth/o/facebook/?redirect_uri=http://localhost:5173/facebook`)
-            window.location.replace(res.data.authorization_url)
+            const res = await axios.get(`http://localhost:8000/accounts/facebook/login/callback/`)
+            // window.location.replace(res.data.authorization_url)
         }catch(e){
             console.log(e)
         }
@@ -71,6 +75,7 @@ const SignUp = () => {
         <div className="container mt-5">
             <h1>Sign Up</h1>
             <p>Create new accoutn</p>
+
             <form onSubmit={e=>onSubmit(e)}>
                 <div className="form-group">
                     <input type="text" className="form-control mb-2" placeholder="Username" value={username} name='username' onChange={e=>onChange(e)} required/>
@@ -92,14 +97,19 @@ const SignUp = () => {
                 </div>
                 <button className="btn btn-primary" type='submit'>Sign Up</button>
                 </form>
+
                 <div>
-                    <GoogleButton type='dark' className="btn btn-danger mt-3" onClick={continueWithGoogle} />
-  
-                </div>
-                <div>
-                    <button className="btn btn-primary mt-3" onClick={continueWithFacebook}>
-                        Continue with Facebook
+                    <form action='https://accounts.google.com/o/oauth2/v2/auth'>
+                    <input type="hidden" name="client_id" value="726797131514-gpuj32fjc3on3l0man3krslmp967nldq.apps.googleusercontent.com" />
+                    <input type="hidden" name="prompt" value="consent" />
+                    <input type="hidden" name="response_type" value="token" />
+                    <input type="hidden" name="redirect_uri" value="http://localhost:5173/google" />
+                    <input type="hidden" name="scope" value="openid email profile" />
+                    <button className="btn btn-danger mt-3" type="submit">
+                            Continue with google
                     </button>
+
+                </form>
                 </div>
                 <p className="mt-3">
                     Already an user ? <Link to='/login'>Sign In</Link>

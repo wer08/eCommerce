@@ -13,19 +13,19 @@ const Google = () => {
     
     useEffect(()=>{
         const values = new URLSearchParams(location.search);
-        const state = values.get('state') ? values.get('state') : null;
-        const code = values.get('code') ? values.get('code') : null
+        const token = values.get('access_token') ? values.get('state') : null;
 
-        if(state && code)
+
+        if(token)
         {
-            dispatch(googleAuthenticate({state,code}))
+            // dispatch(googleAuthenticate(token))
         }
-        if(isAuthenticated){
-            navigate('/')
-        }
-        else{
-            navigate('/login')
-        }
+        // if(isAuthenticated){
+        //     navigate('/')
+        // }
+        // else{
+        //     navigate('/login')
+        // }
 
 
     },[location])
@@ -33,8 +33,9 @@ const Google = () => {
 
 
     return (
-        <>
-        </>
+        <div>
+            google
+        </div>
     )
 }
 

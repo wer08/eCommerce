@@ -16,8 +16,8 @@ export type TArgSignUp = {
   email: string,
   firstName: string,
   lastName: string,
-  password: string,
-  rePassword: string
+  password1: string,
+  password2: string
 }
 
 export type TArgActivate = {
@@ -51,5 +51,9 @@ export type TSocialDetail = {
   state: string,
   code: string;
   [key: string]: any;
+}
+export type TResponseFacebook = {
+  access_token: string,
+  user: User
 }
 

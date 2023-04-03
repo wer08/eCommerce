@@ -61,7 +61,7 @@ INSTALLED_APPS = [
 ]
 REST_AUTH = {
     'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'my-app-auth',
+    'JWT_AUTH_COOKIE': 'eCommerce',
     'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
 }
 
@@ -180,6 +180,26 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'eCommerce.User'
 
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'GRAPH_API_URL': 'https://graph.facebook.com/v13.0',
+    }
+}
+
 # DJOSER = {
 #     'USER_AUTHENTICATION_RULE': 'djoser.auth.jwt.authentication.JWTAuthentication',
 #     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
@@ -222,17 +242,15 @@ AUTH_USER_MODEL = 'eCommerce.User'
 # }
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.open_id.OpenIdAuth',
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
+    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend'
 )
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000',
-     'http://localhost:5173'
-]
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
