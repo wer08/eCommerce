@@ -1,10 +1,10 @@
 # myapp/urls.py
 
 from django.urls import path
-from .views import google_auth
+from . import views
 
 urlpatterns = [
     # other paths here...
-    path('google-auth', google_auth, name='google-auth'),
+    path('dj-rest-auth/google/', views.GoogleLogin.as_view(), name='google-login'),
 ]
 

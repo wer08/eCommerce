@@ -102,7 +102,7 @@ const SignUp = () => {
                     <form action='https://accounts.google.com/o/oauth2/v2/auth'>
                     <input type="hidden" name="client_id" value="726797131514-gpuj32fjc3on3l0man3krslmp967nldq.apps.googleusercontent.com" />
                     <input type="hidden" name="prompt" value="consent" />
-                    <input type="hidden" name="response_type" value="token" />
+                    <input type="hidden" name="response_type" value="code" />
                     <input type="hidden" name="redirect_uri" value="http://localhost:5173/google" />
                     <input type="hidden" name="scope" value="openid email profile" />
                     <button className="btn btn-danger mt-3" type="submit">

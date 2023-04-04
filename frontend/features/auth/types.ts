@@ -44,7 +44,6 @@ export type TSignUpFormData = {
   rePassword: string
 }
 export type TArgSocialAuthenticate = {
-  state: string,
   code: string
 }
 export type TSocialDetail = {

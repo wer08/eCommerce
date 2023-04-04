@@ -104,36 +104,10 @@ export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', 
 
 })
 
-export const facebookAuthenticate = createAsyncThunk('auth/facebookAuthentication', async (arg:TArgSocialAuthenticate)=>{
-  const {state,code} = arg;
-  if (state && code && !localStorage.getItem('access'))
-  {
-    const config = {
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    };
-    const details: TSocialDetail = {
-      'state': state,
-      'code': code
-    };
-    const body = {
-      
-    }
-    try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/facebook/`,config)
-      return res.data
-    }catch(error:any){
-      throw error.message
-    }
-  }
-  else{
-    throw new Error('no credentials')
-  }
-})
+
 export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', async (arg:string)=>{
-  const token = arg;
-  if (token && !localStorage.getItem('access'))
+  const code = arg;
+  if(code && !localStorage.getItem('access'))
   {
     const config = {
       headers: {
@@ -141,10 +115,10 @@ export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', 
       }
     };
     const body = {
-      token: token
+      code: code
     }
     try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}//dj-rest-auth/google/`,body,config)
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/google/`,body,config)
       return res.data
     }catch(error:any){
       console.log(error)
@@ -258,7 +232,7 @@ export const authSlice = createSlice({
           state.user = null
       })
     builder
-      .addMatcher(isAnyOf(login.fulfilled,facebookAuthenticate.fulfilled,googleAuthenticate.fulfilled), (state,action) => {
+      .addMatcher(isAnyOf(login.fulfilled,googleAuthenticate.fulfilled), (state,action) => {
         localStorage.setItem('access',action.payload.access_token);
         state.status = 'succeeded'
         state.isAuthenticated = true
@@ -273,7 +247,7 @@ export const authSlice = createSlice({
           state.status = 'failed'
           state.error = action.error.message
       })
-      .addMatcher(isAnyOf(login.rejected,signUp.rejected,facebookAuthenticate.rejected,googleAuthenticate.rejected),(state,action)=>{
+      .addMatcher(isAnyOf(login.rejected,signUp.rejected,googleAuthenticate.rejected),(state,action)=>{
         localStorage.removeItem('access');
         state.status = "failed"   
         state.isAuthenticated = false
@@ -282,7 +256,7 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending, passwordReset.pending, passwordResetConfirm.pending, facebookAuthenticate.pending, googleAuthenticate.pending, loadUser.pending), (state,action) => {
+      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending, passwordReset.pending, passwordResetConfirm.pending, googleAuthenticate.pending, loadUser.pending), (state,action) => {
           state.status = 'loading'
       })
 

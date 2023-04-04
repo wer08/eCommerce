@@ -1,31 +1,31 @@
 import Navbar from '../../src/components/Navbar';
 import { useEffect } from 'react';
 import { getIsAuthenticated, googleAuthenticate } from './authSlice';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch,useAppSelector } from '../../hooks';
 
 const Google = () => {
 
-    let location = useLocation();
     const isAuthenticated = useAppSelector(getIsAuthenticated);
     const dispatch = useAppDispatch();
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    const code = searchParams.get('code')
     
     useEffect(()=>{
-        const values = new URLSearchParams(location.search);
-        const token = values.get('access_token') ? values.get('state') : null;
+        
+        console.log(code)
 
-
-        if(token)
+        if(code)
         {
-            // dispatch(googleAuthenticate(token))
+            // dispatch(googleAuthenticate(code))
         }
-        // if(isAuthenticated){
-        //     navigate('/')
-        // }
-        // else{
-        //     navigate('/login')
-        // }
+        if(isAuthenticated){
+            navigate('/')
+        }
+        else{
+            navigate('/login')
+        }
 
 
     },[location])
