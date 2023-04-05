@@ -12,8 +12,6 @@ const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
         username: "",
         email: "",
-        firstName: "",
-        lastName: "",
         password: "",
         rePassword: ""
     });
@@ -21,7 +19,7 @@ const SignUp = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const isAuthenticated = useAppSelector(getIsAuthenticated)
-    const {username,email,firstName,lastName,password,rePassword} = formData;
+    const {username,email,password,rePassword} = formData;
 
     if(isAuthenticated){
         navigate('/')
@@ -36,10 +34,7 @@ const SignUp = () => {
             dispatch(signUp({
                 username: username,
                 email: email,
-                firstName: firstName,
-                lastName: lastName,
-                password1: password,
-                password2: rePassword
+                password: password,
             }))
         }
     }
@@ -84,16 +79,10 @@ const SignUp = () => {
                     <input type="email" className="form-control mb-2" placeholder="Email" value={email} name='email' onChange={e=>onChange(e)} required/>
                 </div>
                 <div className="form-group">
-                    <input type="text" className="form-control mb-2" placeholder="First Name" value={firstName} name='firstName' onChange={e=>onChange(e)} required/>
-                </div>
-                <div className="form-group">
-                    <input type="text" className="form-control mb-2" placeholder="Last Name" value={lastName} name='lastName' onChange={e=>onChange(e)} required/>
-                </div>
-                <div className="form-group">
                     <input type="password" className="form-control mb-2" minLength={6} placeholder="Password" value={password} name='password' pattern="(?=.*\d)(?=.*\w)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={e=>onChange(e)} required/>
                 </div>
                 <div className="form-group">
-                    <input type="password" className="form-control mb-2" placeholder="Confirm Password" minLength={6} value={rePassword} name='rePassword' onChange={e=>onChange(e)} required/>
+                    <input type="password" className="form-control mb-2" minLength={6} placeholder="Confirm Password" value={rePassword} name='password' pattern="(?=.*\d)(?=.*\w)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={e=>onChange(e)} required/>
                 </div>
                 <button className="btn btn-primary" type='submit'>Sign Up</button>
                 </form>

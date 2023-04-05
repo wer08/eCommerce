@@ -18,15 +18,15 @@ const initialState: authState = {
 }
 
 export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
-  const {username,email,firstName,lastName,password1,password2} = arg;
+  const {username,email,password} = arg;
   const config = {
     headers: {
         'Content-Type': 'application/json'
     }
   }
-  const body = JSON.stringify({username,email,firstName,lastName,password1,password2}); 
+  const body = JSON.stringify({username,email,password}); 
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/registration/`,body,config)
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,body,config)
   }catch(error:any){
     throw error.message
   }
@@ -35,7 +35,7 @@ export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
 export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const config = {
     headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
     } 
     };
   const {username,password} = arg
@@ -43,7 +43,7 @@ export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const body = JSON.stringify({username, password});
 
   try{
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/login/`,body,config);
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signin`,body,config);
     return response.data
   }catch(error: any){
     throw error.message;
@@ -56,12 +56,12 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
     const config = {
       headers: {
           'Content-Type': 'application/json',
-          'Authorization': `JWT ${token}`,
+          'x-access-token': `${token}`,
           'Accept': 'application/json',
       }
   };
     try{
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/dj-rest-auth/user/`,config)
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/test/user/`,config)
       return res.data
 
     }
@@ -75,117 +75,6 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
 
 
 })
-
-export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', async () => {
-  if (localStorage.getItem('access'))
-  {
-    const config = {
-      headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-      }
-    };
-    const body = JSON.stringify({
-      token: localStorage.getItem('access')
-    })
-
-    try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/token/verify/ `,body,config)
-      if (res.data.code === 'token_not_valid'){
-        throw new Error('token_not_valid')
-      }
-    }catch(error: any){
-      throw error.message
-    }
-  }
-  else{
-    throw new Error('no access token');
-  }
-
-})
-
-
-export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', async (arg:string)=>{
-  const code = arg;
-  if(code && !localStorage.getItem('access'))
-  {
-    const config = {
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    };
-
-    const body = {
-      code: code
-    }
-    try{
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/google/`,body,config)
-      return res.data
-    }catch(error:any){
-      console.log(error)
-      throw error.message
-
-    }
-  }
-  else{
-    throw new Error('no credentials')
-  }
-})
-
-export const activate = createAsyncThunk('auth/activate', async (arg:TArgActivate) => {
-  const config = {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-  }
-  const {key} = arg
-  const body = JSON.stringify({key});
-  try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/registration/verify-email/`,body,config)
-  }catch(error: any){
-    throw error.message
-  }
-}) 
-
-export const passwordReset = createAsyncThunk('auth/resetPassword', async (email: string) => {
-  const config = {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-  }
-  const body = JSON.stringify({
-      email: email
-  })
-  try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/password/reset/`,body, config);
-  }catch(error:any){
-    throw error.message
-  }
-})
-
-export const passwordResetConfirm = createAsyncThunk('auth/resetPasswordConfirm', async (arg: TArgPassConfirm) => {
-  const {uid,token,newPassword,reNewPassword} = arg;
-  const config = {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-  }
-  const body = JSON.stringify({
-      uid: uid,
-      token: token,
-      new_password1: newPassword,
-      new_password2: reNewPassword
-  })
-  try{
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/dj-rest-auth/password/reset/confirm/ `,body,config)
-    return res.data
-
-  }catch(error:any){
-    throw error.message
-  }
-
-})
-
 
 
 
@@ -207,22 +96,13 @@ export const authSlice = createSlice({
 
     builder  
 
-      .addCase(checkAuthentication.fulfilled, (state,action) => {
-          state.status = 'succeeded'
-          state.isAuthenticated = true
-          state.access = localStorage.getItem('access')
-      })
-      .addCase(checkAuthentication.rejected, (state,action) => {
-          state.status = 'failed'
-          state.error = action.error.message
-          state.isAuthenticated = false
-      })
       .addCase(signUp.fulfilled,(state,action)=>{
         state.status = 'success'
         state.isAuthenticated = false
       })
       .addCase(loadUser.fulfilled, (state,action) => {
         state.status = 'succeeded'
+        state.isAuthenticated = true
         state.user = action.payload
       })
       .addCase(loadUser.rejected, (state,action) => {
@@ -233,22 +113,16 @@ export const authSlice = createSlice({
           state.user = null
       })
     builder
-      .addMatcher(isAnyOf(login.fulfilled,googleAuthenticate.fulfilled), (state,action) => {
-        localStorage.setItem('access',action.payload.access_token);
+      .addMatcher(isAnyOf(login.fulfilled), (state,action) => {
+        localStorage.setItem('access',action.payload.accessToken);
         state.status = 'succeeded'
         state.isAuthenticated = true
-        state.access = action.payload.access_token
+        state.access = action.payload.accessToken
         state.user = action.payload.user
         state.error = null
       })
-      .addMatcher(isAnyOf(activate.fulfilled, passwordReset.fulfilled, passwordResetConfirm.fulfilled), (state,action) => {
-          state.status = 'succeeded'
-      })
-      .addMatcher(isAnyOf(activate.rejected,passwordReset.rejected, passwordResetConfirm.rejected), (state,action) => {
-          state.status = 'failed'
-          state.error = action.error.message
-      })
-      .addMatcher(isAnyOf(login.rejected,signUp.rejected,googleAuthenticate.rejected),(state,action)=>{
+
+      .addMatcher(isAnyOf(login.rejected,signUp.rejected),(state,action)=>{
         localStorage.removeItem('access');
         state.status = "failed"   
         state.isAuthenticated = false
@@ -257,7 +131,7 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-      .addMatcher(isAnyOf(login.pending,activate.pending,loadUser.pending, passwordReset.pending, passwordResetConfirm.pending, googleAuthenticate.pending, loadUser.pending), (state,action) => {
+      .addMatcher(isAnyOf(login.pending,loadUser.pending,loadUser.pending), (state,action) => {
           state.status = 'loading'
       })
 

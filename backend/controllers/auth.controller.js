@@ -1,5 +1,7 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = db.user;
 const Role = db.role;
 
@@ -29,7 +31,8 @@ exports.signup = (req, res) => {
         } else {
           // user role = 1
           user.setRoles([1]).then(() => {
-            res.send({ message: "User was registered successfully!" });
+            res.send({ 
+              message: "User was registered successfully!" });
           });
         }
       })
@@ -71,12 +74,14 @@ exports.signup = (req, res) => {
             authorities.push("ROLE_" + roles[i].name.toUpperCase());
           }
           res.status(200).send({
+            accessToken: token,
+            user: {
             id: user.id,
             username: user.username,
             email: user.email,
             roles: authorities,
-            accessToken: token
-          });
+            }
+        });
         });
       })
       .catch(err => {

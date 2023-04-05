@@ -14,10 +14,7 @@ export type TArgLogin = {
 export type TArgSignUp = {
   username: string,
   email: string,
-  firstName: string,
-  lastName: string,
-  password1: string,
-  password2: string
+  password:string
 }
 
 export type TArgActivate = {
@@ -32,14 +29,11 @@ export type TArgPassConfirm = {
 export type User = {
     username: string,
     email: string,
-    firstName: string,
-    lastName: string
+    id: number
 }
 export type TSignUpFormData = {
   username: string,
   email: string,
-  firstName: string,
-  lastName: string,
   password: string,
   rePassword: string
 }
