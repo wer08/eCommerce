@@ -8,7 +8,7 @@ import Activate from '../features/auth/Activate'
 import ResetPassword from '../features/auth/ResetPassword'
 import ResetPasswordConfirm from '../features/auth/ResetPasswordConfirm'
 import Google from '../features/auth/Google'
-import Facebook from '../features/auth/Facebook'
+
 import SignUp from '../features/auth/SignUp'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Layout from './hocs/Layout'
@@ -25,7 +25,6 @@ function App() {
           <Route path='/activate/:key' element={<Activate />} />
           <Route path='/reset_password' element={<ResetPassword/>} />
           <Route path='/google' element={<Google />} />
-          <Route path='/facebook' element={<Facebook />} />
           <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm />} />
         </Routes>
       </Layout>

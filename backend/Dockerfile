@@ -1,5 +1,7 @@
-FROM python:3
-WORKDIR /code
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
-COPY . /code/
+FROM node:14
+
+WORKDIR /backend
+COPY package.json .
+RUN npm install
+COPY . .
+CMD npm start

@@ -114,6 +114,7 @@ export const googleAuthenticate = createAsyncThunk('auth/googleAuthentication', 
           'Content-Type': 'application/json'
       }
     };
+
     const body = {
       code: code
     }

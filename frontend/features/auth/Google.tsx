@@ -18,7 +18,7 @@ const Google = () => {
 
         if(code)
         {
-            // dispatch(googleAuthenticate(code))
+            dispatch(googleAuthenticate(code))
         }
         if(isAuthenticated){
             navigate('/')
