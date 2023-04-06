@@ -58,9 +58,15 @@ const SignUp = () => {
         setFormData({...formData, [field]: e.target.value})
     }
 
+
+
     window.auth = (res:any) => {
-        console.log(res)
-        dispatch(googleAuthenticate(res.credential)).then(()=>navigate('/login'))
+        const jwt: string = res.credential
+        navigate('/passwordForGoogle',{
+            state: {
+                jwt: jwt
+            }
+        })
         
     }
 

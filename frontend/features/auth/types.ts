@@ -37,6 +37,10 @@ export type TSignUpFormData = {
   password: string,
   rePassword: string
 }
+export type TGoogleArg = {
+  jwt: string,
+  password: string
+}
 export type GoogleUser = {
   aud: string,
   azp: string,

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TArgLogin, GoogleUser, TArgSignUp} from './types'
+import type { authState, TArgLogin, GoogleUser, TArgSignUp, TGoogleArg} from './types'
 import jwtDecode from 'jwt-decode'
 axios.defaults.withCredentials = true;
 
@@ -33,12 +33,13 @@ export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
   }
 })
 
-export const googleAuthenticate = createAsyncThunk('auth/google', async (arg: string) => {
-  const user:GoogleUser = jwtDecode(arg)
+export const googleAuthenticate = createAsyncThunk('auth/google', async (arg: TGoogleArg) => {
+  const {jwt,password} = arg
+  const user:GoogleUser = jwtDecode(jwt)
   const body = {
     username: user.name,
     email: user.email,
-    password: user.iss
+    password: password
   }
   console.log(body)
   const config = {

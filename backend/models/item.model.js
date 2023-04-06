@@ -7,9 +7,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       price: {
-        type: Sequelize.NUMBER
+        type: Sequelize.DECIMAL(10,2)
       }
     });
   
-    return User;
+    return Item;
   };
