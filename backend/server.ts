@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 });
 const db = require("./models");
 const Role = db.role;
-db.sequelize.sync({force: true}).then(() => {
+db.sequelize.sync().then(() => {
     console.log('Drop and Resync Db');
     initial();
   });

@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TArgLogin, TArgActivate, TArgPassConfirm, TArgSignUp, TArgSocialAuthenticate, TSocialDetail, User} from './types'
+import type { authState, TArgLogin, GoogleUser, TArgSignUp} from './types'
+import jwtDecode from 'jwt-decode'
 axios.defaults.withCredentials = true;
 
 
@@ -32,6 +33,28 @@ export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
   }
 })
 
+export const googleAuthenticate = createAsyncThunk('auth/google', async (arg: string) => {
+  const user:GoogleUser = jwtDecode(arg)
+  const body = {
+    username: user.name,
+    email: user.email,
+    password: user.iss
+  }
+  console.log(body)
+  const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+  }
+  try{
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,body,config)
+  }catch(error:any){
+    throw error.message
+  }
+})
+
+
+
 export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const config = {
     headers: {
@@ -49,6 +72,10 @@ export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
     throw error.message;
   }
 })
+
+export const auth = (response:any) => {
+  console.log(response)
+}
 
 export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   if (localStorage.getItem('access')){
@@ -72,9 +99,8 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   else{
     throw new Error('no access token')
   }
-
-
 })
+
 
 
 
@@ -85,18 +111,22 @@ export const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem('access');
-      localStorage.removeItem('refresh');
       state.status = "idle";
       state.isAuthenticated = false;
       state.access = null
       state.user = null
-    }
+    },
+
   },
   extraReducers(builder){
 
     builder  
 
       .addCase(signUp.fulfilled,(state,action)=>{
+        state.status = 'success'
+        state.isAuthenticated = false
+      })
+      .addCase(googleAuthenticate.fulfilled,(state,action)=>{
         state.status = 'success'
         state.isAuthenticated = false
       })
@@ -112,6 +142,7 @@ export const authSlice = createSlice({
           state.access = null
           state.user = null
       })
+
     builder
       .addMatcher(isAnyOf(login.fulfilled), (state,action) => {
         localStorage.setItem('access',action.payload.accessToken);
@@ -122,7 +153,7 @@ export const authSlice = createSlice({
         state.error = null
       })
 
-      .addMatcher(isAnyOf(login.rejected,signUp.rejected),(state,action)=>{
+      .addMatcher(isAnyOf(login.rejected,signUp.rejected,googleAuthenticate.rejected),(state,action)=>{
         localStorage.removeItem('access');
         state.status = "failed"   
         state.isAuthenticated = false
@@ -131,7 +162,7 @@ export const authSlice = createSlice({
         state.error = action.error.message
         state.user = null
       })
-      .addMatcher(isAnyOf(login.pending,loadUser.pending,loadUser.pending), (state,action) => {
+      .addMatcher(isAnyOf(login.pending,loadUser.pending,loadUser.pending,googleAuthenticate.pending), (state,action) => {
           state.status = 'loading'
       })
 
