@@ -33,13 +33,24 @@ const SignUp = () => {
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
-        if(password===rePassword){
+        const form = e.currentTarget
+        if(form.checkValidity()){
+ 
+            if(password != rePassword){
+                return
+            }
             dispatch(signUp({
                 username: username,
                 email: email,
                 password: password,
             })).then(()=>navigate('/login'))
         }
+        else{
+            console.log('valid')
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated')
     }
     
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -58,18 +69,30 @@ const SignUp = () => {
             <h1>Sign Up</h1>
             <p>Create new accoutn</p>
 
-            <form onSubmit={e=>onSubmit(e)}>
-                <div className="form-group">
+            <form onSubmit={e=>onSubmit(e)} className="needs-validation" noValidate>
+                <div >
                     <input type="text" className="form-control mb-2" placeholder="Username" value={username} name='username' onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        Please choose a username.
+                    </div>
                 </div>
-                <div className="form-group">
+                <div >
                     <input type="email" className="form-control mb-2" placeholder="Email" value={email} name='email' onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        Please choose an email.
+                    </div>
                 </div>
-                <div className="form-group">
+                <div >
                     <input type="password" className="form-control mb-2" minLength={6} placeholder="Password" value={password} name='password' pattern="(?=.*\d)(?=.*\w)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        Please provide a password. It needs to have at least 8 characters with one big letter one small letter a number and a special sign
+                    </div>
                 </div>
-                <div className="form-group">
-                    <input type="password" className="form-control mb-2" minLength={6} placeholder="Confirm Password" value={rePassword} name='rePassword' pattern="(?=.*\d)(?=.*\w)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={e=>onChange(e)} required/>
+                <div >
+                    <input type="password" className="form-control mb-2" minLength={6} placeholder="Confirm Password" value={rePassword} name='rePassword' pattern={`^${password}$`} onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        passwords must be the same
+                    </div>               
                 </div>
                 <button className="btn btn-primary" type='submit'>Sign Up</button>
                 </form>
