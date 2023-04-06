@@ -22,7 +22,16 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.item = require("../models/item.model.js")(sequelize,Sequelize);
+db.cart = require("../models/cart.model.js")(sequelize,Sequelize);
 
+
+db.cart.belongsTo(db.user)
+db.item.belongsToMany(db.cart,{
+  through: "item_carts",
+  foreignKey: "itemId",
+  otherKey:"cartId"
+})
 db.role.belongsToMany(db.user, {
   through: "user_roles",
   foreignKey: "roleId",
