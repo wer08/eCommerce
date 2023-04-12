@@ -12,7 +12,7 @@ type TUser = {
 interface usersState{
   users: TUser[],
   status: string,
-  error: string | null
+  error: string | null | undefined
 }
 
 // Define the initial state using that type
@@ -46,6 +46,19 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
 
+  },
+  extraReducers(builder) {
+    builder.addCase(getUsers.fulfilled,(state,action)=>{
+      state.status = 'success'
+      state.users = action.payload
+    })
+    .addCase(getUsers.pending,(state,action)=>{
+      state.status = 'pending'
+    })
+    .addCase(getUsers.rejected,(state,action)=>{
+      state.status = 'failed'
+      state.error = action.error.message
+    }) 
   },
 })
 
