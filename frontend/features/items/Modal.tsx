@@ -1,48 +1,42 @@
 import React from "react";
 import { TItem } from "./types";
-interface Props{
-    selectedItem: TItem
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+interface Props {
+  selectedItem: TItem;
 }
 
-const Modal: React.FC<Props> = ({selectedItem}) => {
-    return ( 
+const Modal: React.FC<Props> = ({ selectedItem }) => {
+  return (
     <div className="modal fade" id="itemModal" tabIndex={-1} role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
-    <div className="modal-dialog">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title" id="itemModalLabel">{selectedItem.name}</h5>
-          <button
-            type="button"
-            className="btn-close"
-            aria-label="Close"
-            data-bs-dismiss='modal'
-          ></button>
-        </div>
-        <div className="modal-body">
-          <p>{selectedItem.description}</p>
-          <p>${selectedItem.price}</p>
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            data-bs-dismiss='modal'
-            // onClick={() => handleAddToCart(selectedItem)}
-          >
-            Add to cart
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            data-bs-dismiss='modal'
-            // onClick={() => handleBuyNow(selectedItem)}
-          >
-            Buy now
-          </button>
+      <div className="modal-dialog modal-dialog-centered" role="document">
+        <div className="modal-content">
+
+          <div className="modal-body">
+            <div className="row">
+              {/* <div className="col-md-6">
+                <img src={selectedItem.image} alt={selectedItem.name} className="w-100" />
+              </div> */}
+              <div className="col-md-6">
+                <h5 className="font-weight-bold">{selectedItem.name}</h5>
+                <p className="my-4">{selectedItem.description}</p>
+                <h4 className="mb-4">${selectedItem.price}</h4>
+                <button type="button" className="btn btn-primary w-100 mb-3">
+                  <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                  Add to cart
+                </button>
+                <button type="button" className="btn btn-outline-primary w-100">
+                  <FontAwesomeIcon icon={faArrowRight} className="mr-2" />
+                  Buy now
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div> );
-}
- 
+  );
+};
+
 export default Modal;
