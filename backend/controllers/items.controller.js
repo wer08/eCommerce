@@ -14,7 +14,8 @@ exports.getItems = (req,res) => {
             message: err.message
         })
     })
-
+}
+exports.addItem = (req,res) => {
     Item.create({
         name: req.body.name,
         description: req.body.description,
