@@ -10,5 +10,6 @@ module.exports = function(app) {
   });
 
   app.get("/api/items/all", controller.getItems);
+  app.post("/api/items/add", controller.addItem);
 
 };

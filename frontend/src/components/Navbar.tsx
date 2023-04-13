@@ -37,8 +37,12 @@ const Navbar = () => {
                 <li className="nav-item">
                     <Link className="nav-link click" to="#!" onClick={()=>handleLogout()}>LogOut</Link>
                 </li>
+                
                 <li className="nav_item">
                     <Link className="nav-link click" to="/profile">Profile</Link>
+                </li>
+                <li className="nav_item">
+                    <Link className="nav-link click" to="/addItem">Add item</Link>
                 </li>
             </>
 

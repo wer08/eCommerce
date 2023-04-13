@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 const db = require("./models");
 const Role = db.role;
 const Item = db.item;
+const User = db.user;
 db.sequelize.sync({
   alter: true
 }).then(() => {
@@ -57,6 +58,13 @@ db.sequelize.sync({
       description: "This is second random item",
       price: 12.54
     })
+    User.create({
+      username: 'wer08',
+      email: 'wer08@mail.pl',
+      password: 'M0rg0th&CO'
+    })
+
+
   }
 
 //routes
