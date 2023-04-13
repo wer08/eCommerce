@@ -24,8 +24,10 @@ app.get("/", (req, res) => {
 });
 const db = require("./models");
 const Role = db.role;
-db.sequelize.sync().then(() => {
-    console.log('Drop and Resync Db');
+const Item = db.item;
+db.sequelize.sync({
+  alter: true
+}).then(() => {
     initial();
   });
   
@@ -44,6 +46,17 @@ db.sequelize.sync().then(() => {
       id: 3,
       name: "admin"
     });
+
+    Item.create({
+      name: "randomItem1",
+      description: "This is first random item",
+      price: 55.67
+    })
+    Item.create({
+      name: "randomItem2",
+      description: "This is second random item",
+      price: 12.54
+    })
   }
 
 //routes
