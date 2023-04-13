@@ -63,6 +63,7 @@ db.sequelize.sync({
 require('./routes/auth.routes')(app);
 require('./routes/users.routes')(app);
 require('./routes/user.routes')(app);
+require('./routes/items.routes')(app);
 
 
 

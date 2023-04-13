@@ -50,7 +50,7 @@ export const usersSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getUsers.fulfilled,(state,action)=>{
       state.status = 'success'
-      state.users = action.payload
+      state.users = action.payload.users
     })
     .addCase(getUsers.pending,(state,action)=>{
       state.status = 'pending'
