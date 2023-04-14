@@ -1,8 +1,9 @@
 import { ReactNode, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { loadUser } from "../../features/auth/authSlice";
 import { getUsers } from "../../features/users/usersSlice";
+import { getUser } from "../../features/auth/authSlice";
 
 interface Props{
     children: ReactNode
@@ -10,11 +11,13 @@ interface Props{
 
 const Layout = ({children}:Props) => {
     const dispatch = useAppDispatch()
+    const user = useAppSelector(getUser)
 
     useEffect(()=>{
+        console.log(user)
         dispatch(loadUser())
         dispatch(getUsers())
-    },[])
+    },[dispatch])
 
     return ( 
         <div>

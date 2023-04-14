@@ -4,9 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { getIsAuthenticated, logout, loadUser } from "../../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import ModalCart from '../../features/cart/ModalCart'
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false)
     const isAuthenticated = useAppSelector(getIsAuthenticated)
     const dispatch = useAppDispatch()
 
@@ -58,6 +60,10 @@ const Navbar = () => {
 
     }
 
+    const onClick = () => {
+        setModalIsOpen(true)
+    }
+
 
 
 
@@ -75,9 +81,10 @@ const Navbar = () => {
                         </li>
                         {isAuthenticated ? authLinks() : guestLink()}
                     </ul>
-                    {isAuthenticated && <FontAwesomeIcon className="navbar-text ms-auto me-5" icon={faCartShopping} />}
+                    {isAuthenticated && <FontAwesomeIcon className="navbar-text ms-auto me-5 cart" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>}
                 </div>
             </nav>
+            {modalIsOpen && <ModalCart />}
             {redirect ? afterLogout() : <></>}
         </>
      );
