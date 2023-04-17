@@ -2,6 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+const fs = require('fs');
+
+const buffer = fs.readFileSync('./media/NoPicture.jpg');
+
 
 const app = express();
 
@@ -51,12 +55,14 @@ db.sequelize.sync({
     Item.create({
       name: "randomItem1",
       description: "This is first random item",
-      price: 55.67
+      price: 55.67,
+      picture: buffer
     })
     Item.create({
       name: "randomItem2",
       description: "This is second random item",
-      price: 12.54
+      price: 12.54,
+      picture: buffer
     })
     User.create({
       username: 'wer08',
@@ -79,4 +85,5 @@ require('./routes/items.routes')(app);
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
+
 });

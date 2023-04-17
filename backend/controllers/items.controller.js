@@ -20,6 +20,7 @@ exports.addItem = (req,res) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
+        picture: req.body.picture
     })
     .then(item => {
         res.status(200).send({

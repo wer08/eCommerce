@@ -8,5 +8,6 @@ export type TItemsState = {
 export type TItem = {
     name: string,
     description: string,
-    price: number 
+    price: number,
+    picture: File
 }

@@ -1,0 +1,4 @@
+
+http://localhost:5173/#access_token=Dqg8ZV7wj17NbVPHZU6yWo7ZxF3FF1shtD4FcROwqEAjd44Y4qO7&token_type=bearer&userid=3541384&locationid=2&hostname=eapi.pcloud.com
+
+ACESSS_TOKEN=Dqg8ZV7wj17NbVPHZU6yWo7ZxF3FF1shtD4FcROwqEAjd44Y4qO7

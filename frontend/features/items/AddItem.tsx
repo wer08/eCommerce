@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TItem } from "./types";
 import { useAppDispatch } from "../../hooks";
 import { addItem } from "./itemsSlice";
+import pcloudSdk from 'pcloud-sdk-js';
+
+
 
 const AddItem = () => {
 
@@ -9,21 +12,23 @@ const AddItem = () => {
     const [formData, setFormData] = useState<TItem>({
         name: "",
         description: "",
-        price: 0
+        price: 0,
+        picture: null
     });
 
+
+    
     const dispatch = useAppDispatch()
 
     // Define state for form validation
     const [validated, setValidated] = useState(false);
 
     // Destructure form data properties
-    const {name, description, price} = formData;
+    const {name, description, price, picture} = formData;
 
     // Define function to handle form submission
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         // Get the form element
         const form = e.currentTarget;
 
@@ -36,7 +41,19 @@ const AddItem = () => {
         setValidated(true);
 
         // dispatch formData
-
+        if (picture === null){
+            fetch("/media/NoPicture.jpg")
+            .then(response => response.blob())
+            .then(blob => {
+                const defaultImage = new File([blob], 'default-image.png', { type: 'image/png' });
+                setFormData({
+                    ...formData,
+                    picture: defaultImage
+                });
+            })
+            .catch(error => console.error(error));
+        }
+        
         dispatch(addItem(formData))
         
     }
@@ -47,6 +64,17 @@ const AddItem = () => {
             ...formData,
             [e.target.name]: e.target.value
         })
+    }
+    // Define function to handle form input file changes
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let file = null
+        if(e.target.files){
+            file = e.target.files[0]
+            setFormData({
+                ...formData,
+                [e.target.name]: file
+            })
+        }
     }
 
     // Render the form
@@ -79,6 +107,12 @@ const AddItem = () => {
                     <label htmlFor="description" className="form-label">Description:</label>
                     <textarea name="description" value={description} onChange={e=>handleChange(e)} className="form-control" required></textarea>
                     <div className="invalid-feedback">Please enter a valid description.</div>
+                </div>
+                {/* Define the picture input field */}
+                <div className="col-md-12">
+                    <label htmlFor="picture" className="form-label">Picture:</label>
+                    <input type="file" name="picture" onChange={e=>handleFileChange(e)} className="form-control"></input>
+                    <div className="invalid-feedback">Please enter a valid file.</div>
                 </div>
 
                 {/* Define the submit button */}

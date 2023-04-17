@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       price: {
         type: Sequelize.DECIMAL(10,2)
+      },
+      picture: {
+        type: Sequelize.BLOB('long')
       }
     });
   
