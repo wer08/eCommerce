@@ -16,6 +16,7 @@ exports.getItems = (req,res) => {
     })
 }
 exports.addItem = (req,res) => {
+    
     Item.create({
         name: req.body.name,
         description: req.body.description,
@@ -25,6 +26,11 @@ exports.addItem = (req,res) => {
     .then(item => {
         res.status(200).send({
             message: "Item added successfully"
+        })
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: err.message
         })
     })
 }

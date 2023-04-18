@@ -8,31 +8,14 @@ interface Props {
 
 const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
 
-  const [image,setImage] = useState<string | ArrayBuffer | null>(null)
-
-  useEffect(()=>{
-    const blob = new Blob([item.picture], { type: item.picture.type });
-    if(item.picture){
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result)
-      }
-      reader.readAsDataURL(blob)
-    }
-
-  },[])
-  useEffect(()=>{
-    console.log(image)
-  },[image])
-
   return (
     <div className="row mb-4 shadow" onClick={onClick}>
         <div className="col p-0">
         <div className="card">
-            {item.picture && image &&(
+            {item.picture &&(
               <img
-                className="card-img-top"
-                src={image}
+                className="card-img-left listing-image"
+                src="https://wojtekstorage.blob.core.windows.net/quickstart01027160-dde5-11ed-b0b9-37c73d81cb84/eCommerceNoPicture01be4750-dde5-11ed-b0b9-37c73d81cb84.jpg"
                 alt={item.name}
               />
             )}

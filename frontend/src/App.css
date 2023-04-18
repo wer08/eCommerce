@@ -5,3 +5,12 @@
 .cart{
     cursor: pointer;
 }
+
+.listing-image{
+    width: 200px;
+    height: 200px;
+}
+
+.card{
+    flex-direction: row;
+}

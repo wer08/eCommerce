@@ -3,8 +3,69 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 const fs = require('fs');
+const { BlobServiceClient } = require('@azure/storage-blob');
+const { v1: uuidv1 } = require("uuid");
+const { DefaultAzureCredential } = require('@azure/identity');
+
+
 
 const buffer = fs.readFileSync('./media/NoPicture.jpg');
+
+const azureSetup = async () => {
+  try{
+    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+    if (!accountName) throw Error('Azure Storage accountName not found');
+  
+    const blobServiceClient = new BlobServiceClient(
+      `https://${accountName}.blob.core.windows.net`,
+      new DefaultAzureCredential()
+    );
+    
+        // Create a unique name for the container
+    const containerName = 'quickstart' + uuidv1();
+
+    console.log('\nCreating container...');
+    console.log('\t', containerName);
+
+    // Get a reference to a container
+    const containerClient = blobServiceClient?.getContainerClient(containerName);
+    // Create the container
+    const createContainerResponse = await containerClient.create();
+    console.log(
+      `Container was created successfully.\n\trequestId:${createContainerResponse.requestId}\n\tURL: ${containerClient.url}`
+  );
+    // Create a unique name for the blob
+  const blobName = 'eCommerceNoPicture' + uuidv1() + '.jpg';
+
+  // Get a block blob client
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+  // Display blob name and url
+  console.log(
+    `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
+  );
+
+  // Upload data to the blob
+  const uploadBlobResponse = await blockBlobClient.upload(buffer, buffer.length);
+  console.log(
+    `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
+  );
+  console.log('\nListing blobs...');
+
+// List the blob(s) in the container.
+for await (const blob of containerClient.listBlobsFlat()) {
+  // Get Blob Client from name, to get the URL
+  const tempBlockBlobClient = containerClient.getBlockBlobClient(blob.name);
+
+  // Display blob name and URL
+  console.log(
+    `\n\tname: ${blob.name}\n\tURL: ${tempBlockBlobClient.url}\n`
+  );
+}
+  }catch(error){
+    throw error.message
+  }
+}
 
 
 const app = express();
@@ -70,6 +131,8 @@ db.sequelize.sync({
       password: 'M0rg0th&CO'
     })
 
+    azureSetup();
+
 
   }
 
@@ -87,3 +150,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 
 });
+
