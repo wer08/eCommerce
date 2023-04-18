@@ -10,6 +10,7 @@ const { DefaultAzureCredential } = require('@azure/identity');
 
 
 const buffer = fs.readFileSync('./media/NoPicture.jpg');
+let defImgURL = ""
 
 const azureSetup = async () => {
   try{
@@ -20,20 +21,10 @@ const azureSetup = async () => {
       `https://${accountName}.blob.core.windows.net`,
       new DefaultAzureCredential()
     );
-    
-        // Create a unique name for the container
-    const containerName = 'quickstart' + uuidv1();
-
-    console.log('\nCreating container...');
-    console.log('\t', containerName);
 
     // Get a reference to a container
-    const containerClient = blobServiceClient?.getContainerClient(containerName);
-    // Create the container
-    const createContainerResponse = await containerClient.create();
-    console.log(
-      `Container was created successfully.\n\trequestId:${createContainerResponse.requestId}\n\tURL: ${containerClient.url}`
-  );
+    const containerClient = blobServiceClient?.getContainerClient('items');
+
     // Create a unique name for the blob
   const blobName = 'eCommerceNoPicture' + uuidv1() + '.jpg';
 
@@ -52,16 +43,7 @@ const azureSetup = async () => {
   );
   console.log('\nListing blobs...');
 
-// List the blob(s) in the container.
-for await (const blob of containerClient.listBlobsFlat()) {
-  // Get Blob Client from name, to get the URL
-  const tempBlockBlobClient = containerClient.getBlockBlobClient(blob.name);
-
-  // Display blob name and URL
-  console.log(
-    `\n\tname: ${blob.name}\n\tURL: ${tempBlockBlobClient.url}\n`
-  );
-}
+  defImgURL = blockBlobClient.url;
   }catch(error){
     throw error.message
   }
@@ -94,8 +76,12 @@ const User = db.user;
 db.sequelize.sync({
   alter: true
 }).then(() => {
-    initial();
-  });
+    azureSetup()
+    .then(()=>{
+      initial();
+    });
+  })
+  ;
   
   function initial() {
     Role.create({
@@ -117,13 +103,13 @@ db.sequelize.sync({
       name: "randomItem1",
       description: "This is first random item",
       price: 55.67,
-      picture: buffer
+      picture: defImgURL
     })
     Item.create({
       name: "randomItem2",
       description: "This is second random item",
       price: 12.54,
-      picture: buffer
+      picture: defImgURL
     })
     User.create({
       username: 'wer08',
@@ -131,7 +117,7 @@ db.sequelize.sync({
       password: 'M0rg0th&CO'
     })
 
-    azureSetup();
+   
 
 
   }

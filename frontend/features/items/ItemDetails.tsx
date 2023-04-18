@@ -15,7 +15,7 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
             {item.picture &&(
               <img
                 className="card-img-left listing-image"
-                src="https://wojtekstorage.blob.core.windows.net/quickstart01027160-dde5-11ed-b0b9-37c73d81cb84/eCommerceNoPicture01be4750-dde5-11ed-b0b9-37c73d81cb84.jpg"
+                src={item.picture}
                 alt={item.name}
               />
             )}
