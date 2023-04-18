@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import {TItem, TItemsState} from './types'
+import {TItem, TItemUpload, TItemsState} from './types'
 
 
 
@@ -25,11 +25,21 @@ export const getItems = createAsyncThunk('items/getItems',async ()=>{
 
 export const addItem = createAsyncThunk(
   'items/addItem',
-  async (itemData: TItem) => {
+  async (itemData: TItemUpload) => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/api/items/add`;
 
+    const formData = new FormData();
+    formData.append('name', itemData.name);
+    formData.append('description', itemData.description);
+    formData.append('price', itemData.price.toString());
+    if (itemData.picture){
+      formData.append('picture', itemData.picture);
+    }
+
+    console.log(formData)
+
     try {
-      const res = await axios.post(apiUrl, itemData);
+      const res = await axios.post(apiUrl, formData);
 
       return res.data;
     } catch (error:any) {

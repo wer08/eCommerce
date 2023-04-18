@@ -15,13 +15,32 @@ exports.getItems = (req,res) => {
         })
     })
 }
-exports.addItem = (req,res) => {
+exports.addItem =  (req,res) => {
+     // Get a reference to a container
+    const containerClient = blobServiceClient?.getContainerClient('items');
+
+     // Create a unique name for the blob
+    const blobName = 'eCommerceNoPicture' + uuidv1() + '.jpg';
+ 
+    // Get a block blob client
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+ 
+    // Display blob name and url
+    console.log(
+        `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
+    );
+    
+    // Upload data to the blob
+    const uploadBlobResponse = blockBlobClient.upload(req.body.picture, req.body.picture.length);
+    console.log(
+        `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
+    );
     
     Item.create({
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        picture: req.body.picture
+        picture: blockBlobClient.url
     })
     .then(item => {
         res.status(200).send({

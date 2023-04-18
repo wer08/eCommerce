@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TItem } from "./types";
+import { TItem, TItemUpload } from "./types";
 import { useAppDispatch } from "../../hooks";
 import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
@@ -9,7 +9,7 @@ import pcloudSdk from 'pcloud-sdk-js';
 const AddItem = () => {
 
     // Define state for form data
-    const [formData, setFormData] = useState<TItem>({
+    const [formData, setFormData] = useState<TItemUpload>({
         name: "",
         description: "",
         price: 0,
@@ -39,6 +39,7 @@ const AddItem = () => {
 
         // Set the validated state to true to enable the Bootstrap validation feedback styles
         setValidated(true);
+  
 
         // dispatch formData
         if (picture === null){
@@ -51,9 +52,10 @@ const AddItem = () => {
                     picture: defaultImage
                 });
             })
+            .then(()=>console.log(formData))
             .catch(error => console.error(error));
         }
-        
+
         dispatch(addItem(formData))
         
     }

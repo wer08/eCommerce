@@ -11,3 +11,10 @@ export type TItem = {
     price: number,
     picture: string
 }
+
+export type TItemUpload = {
+    name: string,
+    description: string,
+    price: number,
+    picture: Blob | null
+}
