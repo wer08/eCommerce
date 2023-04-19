@@ -62,6 +62,7 @@ db.sequelize.sync({
       name: "randomItem1",
       description: "This is first random item",
       price: 55.67,
+      quantity: 3,
       picture: defImgURL
     }).then(item=>{
       User.findOne({
@@ -83,6 +84,7 @@ db.sequelize.sync({
       name: "randomItem2",
       description: "This is second random item",
       price: 12.54,
+      quantity: 20,
       picture: defImgURL
     }).then(item => {
       User.findOne({

@@ -31,10 +31,9 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
       aria-hidden="true"
     >
       <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
+        <div className="modal-content  justify-content-center">
           <div className="modal-body">
-            <div className="row">
-              <div className="col-md-6">
+            <div className="row ">
                 <h5 className="font-weight-bold">{selectedItem.name}</h5>
                 <img
                 className="card-img-left modal-image"
@@ -52,6 +51,7 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                     id="quantityInput"
                     className="form-control mb-2"
                     min={1}
+                    max={selectedItem.quantity}
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))}
                   />
@@ -73,7 +73,7 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                 <Link to= "/login"><h5 className="text-decoration-none" data-bs-dismiss="modal">Sign In to buy !</h5></Link>
                 }
 
-              </div>
+              
             </div>
           </div>
         </div>

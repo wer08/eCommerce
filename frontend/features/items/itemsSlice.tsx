@@ -32,6 +32,7 @@ export const addItem = createAsyncThunk(
     formData.append('name', itemData.name);
     formData.append('description', itemData.description);
     formData.append('price', itemData.price.toString());
+    formData.append('quantity', itemData.quantity.toString());
     if (itemData.picture){
       formData.append('picture', itemData.picture);
     }

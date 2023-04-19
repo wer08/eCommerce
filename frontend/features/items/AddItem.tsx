@@ -17,7 +17,8 @@ const AddItem = () => {
         description: "",
         price: 0,
         picture: null,
-        user: currentUser
+        user: currentUser,
+        quantity: 1
     });
 
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const AddItem = () => {
     const [validated, setValidated] = useState(false);
 
     // Destructure form data properties
-    const {name, description, price, picture, user} = formData;
+    const {name, description, price, picture, user, quantity} = formData;
 
     // Define function to handle form submission
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
@@ -90,8 +91,17 @@ const AddItem = () => {
                     <label htmlFor="price" className="form-label">Price:</label>
                     <div className="input-group">
                         <span className="input-group-text">$</span>
-                        <input type="number" name="price" value={price} onChange={e=>handleChange(e)} className="form-control" required />
+                        <input type="number" name="price" value={price} onChange={e=>handleChange(e)} className="form-control" min="0.01" required />
                         <div className="invalid-feedback">Please enter a valid price.</div>
+                    </div>
+                </div>
+
+                {/* Define the quantity input field */}
+                <div className="col-md-6">
+                    <label htmlFor="quantity" className="form-label">Quantity:</label>
+                    <div className="input-group">
+                        <input type="number" name="quantity" value={quantity} onChange={e=>handleChange(e)} className="form-control" min="1" required />
+                        <div className="invalid-feedback">Please enter a valid quantity.</div>
                     </div>
                 </div>
 

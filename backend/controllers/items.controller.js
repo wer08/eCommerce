@@ -62,6 +62,7 @@ exports.addItem =  (req,res) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
+        quantity: req.body.quantity,
         picture: url
     })
     .then(item => {
