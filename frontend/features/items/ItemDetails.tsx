@@ -11,6 +11,8 @@ interface Props {
 
 const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
 
+  const description = item.description.length > 50 ? `${item.description.slice(0,50)}...` : item.description
+
   const owner = useAppSelector((state)=>selectUser(state, item.userId))
 
   return (
@@ -32,7 +34,7 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
             <h6 className="card-subtitle mb-2 text-muted">
                 ${item.price}
             </h6>
-            <p className="card-text">{item.description}</p>
+            <p className="card-text">{description}</p>
             </div>
         </div>
         </div>

@@ -1,5 +1,6 @@
 const db = require("../models");
 const Item = db.item;
+const User = db.user;
 const Op = db.Sequelize.Op;
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1 } = require("uuid");
@@ -64,10 +65,21 @@ exports.addItem =  (req,res) => {
         picture: url
     })
     .then(item => {
-        item.setUser(req.body.user)
-        res.status(200).send({
-            message: "Item added successfully"
+        User.findOne({
+            where:{
+                id: JSON.parse(req.body.user).id
+            }
         })
+        .then(user=>{
+            item.setUser(user)
+            res.status(200).send({
+                message: "Item added successfully"
+            })
+        })
+        .catch(error=>{
+            console.log(error.message)
+        })
+
     })
     .catch(err => {
         res.status(500).send({
