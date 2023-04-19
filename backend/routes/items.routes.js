@@ -1,6 +1,7 @@
 const controller = require("../controllers/items.controller")
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage });
 
 module.exports = function(app) {
   app.use(function(req, res, next) {

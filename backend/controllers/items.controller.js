@@ -46,7 +46,7 @@ exports.addItem =  (req,res) => {
         );
         
         // Upload data to the blob
-        const uploadBlobResponse = blockBlobClient.upload(req.file, req.body.file);
+        const uploadBlobResponse = blockBlobClient.upload(req.file.buffer, req.file.buffer.length);
         console.log(
             `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
         );
