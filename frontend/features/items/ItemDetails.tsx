@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TItem } from "./types";
+import { useAppSelector } from "../../hooks";
+import { selectUser } from "../users/usersSlice";
+
 
 interface Props {
   item: TItem;
@@ -7,6 +10,8 @@ interface Props {
 }
 
 const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
+
+  const owner = useAppSelector((state)=>selectUser(state, item.userId))
 
   return (
     <div className="row mb-4 shadow" onClick={onClick}>
@@ -20,6 +25,9 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
               />
             )}
             <div className="card-body">
+            <h6 className="card-subtitle mb-2 text-muted">
+                {owner?.username}
+            </h6>
             <h5 className="card-title">{item.name}</h5>
             <h6 className="card-subtitle mb-2 text-muted">
                 ${item.price}

@@ -13,7 +13,7 @@ export type TItem = {
     description: string,
     price: number,
     picture: string,
-    user: User
+    userId: number
 }
 
 export type TItemUpload = {

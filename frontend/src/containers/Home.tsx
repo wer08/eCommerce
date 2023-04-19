@@ -16,18 +16,6 @@ const Home = () => {
     setSelectedItem(item);
   };
 
-  const handleAddToCart = (item: TItem) => {
-    // add item to cart
-    console.log(`Added ${item.name} to cart!`);
-    
-  };
-
-  const handleBuyNow = (item: TItem) => {
-    // buy item now
-    console.log(`Bought ${item.name}!`);
-    
-  };
-
   useEffect(() => {
     dispatch(getItems());
   }, [dispatch]);
