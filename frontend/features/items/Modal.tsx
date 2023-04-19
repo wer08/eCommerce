@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { TItem } from "./types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "../cart/cartSlice";
+import { getIsAuthenticated } from "../auth/authSlice";
+import { Link } from "react-router-dom";
 
 interface Props {
   selectedItem: TItem;
@@ -12,6 +14,7 @@ interface Props {
 const Modal: React.FC<Props> = ({ selectedItem }) => {
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
 
   const handleAddToCart = () => {
     const item = { ...selectedItem, quantity };
@@ -40,7 +43,9 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
               />
                 <p className="my-4">{selectedItem.description}</p>
                 <h4 className="mb-4">${selectedItem.price}</h4>
-                <div className="form-group">
+                {isAuthenticated ?
+                  <>
+                  <div className="form-group">
                   <label htmlFor="quantityInput">Quantity:</label>
                   <input
                     type="number"
@@ -64,6 +69,10 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                   <FontAwesomeIcon icon={faArrowRight} className="mr-2" />
                   Buy now
                 </button>
+                </> :
+                <Link to= "/login"><h5 className="text-decoration-none" data-bs-dismiss="modal">Sign In to buy !</h5></Link>
+                }
+
               </div>
             </div>
           </div>
