@@ -1,4 +1,6 @@
 const controller = require("../controllers/items.controller")
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -10,6 +12,6 @@ module.exports = function(app) {
   });
 
   app.get("/api/items/all", controller.getItems);
-  app.post("/api/items/add", controller.addItem);
+  app.post("/api/items/add",upload.single("picture"), controller.addItem);
 
 };

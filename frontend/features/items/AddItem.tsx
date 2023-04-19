@@ -3,6 +3,7 @@ import { TItem, TItemUpload } from "./types";
 import { useAppDispatch } from "../../hooks";
 import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
+import { useNavigate } from "react-router";
 
 
 
@@ -15,6 +16,8 @@ const AddItem = () => {
         price: 0,
         picture: null
     });
+
+    const navigate = useNavigate();
 
 
     
@@ -39,24 +42,9 @@ const AddItem = () => {
 
         // Set the validated state to true to enable the Bootstrap validation feedback styles
         setValidated(true);
-  
 
-        // dispatch formData
-        if (picture === null){
-            fetch("/media/NoPicture.jpg")
-            .then(response => response.blob())
-            .then(blob => {
-                const defaultImage = new File([blob], 'default-image.png', { type: 'image/png' });
-                setFormData({
-                    ...formData,
-                    picture: defaultImage
-                });
-            })
-            .then(()=>console.log(formData))
-            .catch(error => console.error(error));
-        }
-
-        dispatch(addItem(formData))
+        dispatch(addItem(formData));
+        navigate("/");
         
     }
 

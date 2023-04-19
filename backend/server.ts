@@ -3,52 +3,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 const fs = require('fs');
-const { BlobServiceClient } = require('@azure/storage-blob');
-const { v1: uuidv1 } = require("uuid");
-const { DefaultAzureCredential } = require('@azure/identity');
 
 
-
-const buffer = fs.readFileSync('./media/NoPicture.jpg');
-let defImgURL = ""
-
-const azureSetup = async () => {
-  try{
-    const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-    if (!accountName) throw Error('Azure Storage accountName not found');
-  
-    const blobServiceClient = new BlobServiceClient(
-      `https://${accountName}.blob.core.windows.net`,
-      new DefaultAzureCredential()
-    );
-
-    // Get a reference to a container
-    const containerClient = blobServiceClient?.getContainerClient('items');
-
-    // Create a unique name for the blob
-  const blobName = 'eCommerceNoPicture' + uuidv1() + '.jpg';
-
-  // Get a block blob client
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-  // Display blob name and url
-  console.log(
-    `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
-  );
-
-  // Upload data to the blob
-  const uploadBlobResponse = await blockBlobClient.upload(buffer, buffer.length);
-  console.log(
-    `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
-  );
-  console.log('\nListing blobs...');
-
-  defImgURL = blockBlobClient.url;
-  }catch(error){
-    throw error.message
-  }
-}
-
+let defImgURL = "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg"
 
 const app = express();
 
@@ -74,14 +31,10 @@ const Role = db.role;
 const Item = db.item;
 const User = db.user;
 db.sequelize.sync({
-  alter: true
+  force:true
 }).then(() => {
-    azureSetup()
-    .then(()=>{
-      initial();
-    });
-  })
-  ;
+    initial()
+  });
   
   function initial() {
     Role.create({

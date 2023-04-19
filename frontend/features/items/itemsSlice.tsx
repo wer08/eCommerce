@@ -36,10 +36,15 @@ export const addItem = createAsyncThunk(
       formData.append('picture', itemData.picture);
     }
 
-    console.log(formData)
+    const config = {
+      headers:{
+        'enctype': "multipart/form-data"
+      }
+
+    }
 
     try {
-      const res = await axios.post(apiUrl, formData);
+      const res = await axios.post(apiUrl, formData,config);
 
       return res.data;
     } catch (error:any) {

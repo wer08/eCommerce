@@ -1,6 +1,10 @@
 const db = require("../models");
 const Item = db.item;
 const Op = db.Sequelize.Op;
+const { BlobServiceClient } = require('@azure/storage-blob');
+const { v1: uuidv1 } = require("uuid");
+const { DefaultAzureCredential } = require('@azure/identity');
+
 
 exports.getItems = (req,res) => {
     Item.findAll()
@@ -16,31 +20,48 @@ exports.getItems = (req,res) => {
     })
 }
 exports.addItem =  (req,res) => {
-     // Get a reference to a container
-    const containerClient = blobServiceClient?.getContainerClient('items');
+    let url = ""
+    console.log(req.body,req.file)
 
-     // Create a unique name for the blob
-    const blobName = 'eCommerceNoPicture' + uuidv1() + '.jpg';
- 
-    // Get a block blob client
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
- 
-    // Display blob name and url
-    console.log(
-        `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
-    );
+    if(req.file){
+        const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+        if (!accountName) throw Error('Azure Storage accountName not found');
+      
+        const blobServiceClient = new BlobServiceClient(
+          `https://${accountName}.blob.core.windows.net`,
+          new DefaultAzureCredential()
+        );
+         // Get a reference to a container
+        const containerClient = blobServiceClient?.getContainerClient('items');
     
-    // Upload data to the blob
-    const uploadBlobResponse = blockBlobClient.upload(req.body.picture, req.body.picture.length);
-    console.log(
-        `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
-    );
+         // Create a unique name for the blob
+        const blobName = 'eCommerce' + uuidv1() + '.jpg';
+     
+        // Get a block blob client
+        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+     
+        // Display blob name and url
+        console.log(
+            `\nUploading to Azure storage as blob\n\tname: ${blobName}:\n\tURL: ${blockBlobClient.url}`
+        );
+        
+        // Upload data to the blob
+        const uploadBlobResponse = blockBlobClient.upload(req.file, req.body.file);
+        console.log(
+            `Blob was uploaded successfully. requestId: ${uploadBlobResponse.requestId}`
+        );
+        url = blockBlobClient.url
+    }
+    else{
+        url = "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg"
+    }
+ 
     
     Item.create({
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        picture: blockBlobClient.url
+        picture: url
     })
     .then(item => {
         res.status(200).send({
