@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { TItem, TItemUpload } from "./types";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
 import { useNavigate } from "react-router";
+import { getUser } from "../auth/authSlice";
 
 
 
 const AddItem = () => {
+    const currentUser = useAppSelector(getUser)
 
     // Define state for form data
     const [formData, setFormData] = useState<TItemUpload>({
         name: "",
         description: "",
         price: 0,
-        picture: null
+        picture: null,
+        user: currentUser
     });
 
     const navigate = useNavigate();
@@ -27,7 +30,7 @@ const AddItem = () => {
     const [validated, setValidated] = useState(false);
 
     // Destructure form data properties
-    const {name, description, price, picture} = formData;
+    const {name, description, price, picture, user} = formData;
 
     // Define function to handle form submission
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {

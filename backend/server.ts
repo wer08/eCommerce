@@ -52,22 +52,50 @@ db.sequelize.sync({
       name: "admin"
     });
 
+    User.create({
+      username: 'wer08',
+      email: 'wer08@mail.pl',
+      password: 'M0rg0th&CO'
+    })
+
     Item.create({
       name: "randomItem1",
       description: "This is first random item",
       price: 55.67,
       picture: defImgURL
+    }).then(item=>{
+      User.findOne({
+        where:{
+          username: 'wer08'
+        }
+      }).then(user=>{
+        item.setUser(user);
+      }).catch(error => {
+        console.log(error.message)
+      })
+
+    }).catch(error => {
+      console.log(error.message);
     })
+
+
     Item.create({
       name: "randomItem2",
       description: "This is second random item",
       price: 12.54,
       picture: defImgURL
-    })
-    User.create({
-      username: 'wer08',
-      email: 'wer08@mail.pl',
-      password: 'M0rg0th&CO'
+    }).then(item => {
+      User.findOne({
+        where:{
+          username: 'wer08'
+        }
+      }).then(user=>{
+        item.setUser(user);
+      }).catch(error => {
+        console.log(error.message)
+      })
+    }).catch(error => {
+      console.log(error.message);
     })
 
    

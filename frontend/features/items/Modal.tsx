@@ -33,6 +33,11 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
             <div className="row">
               <div className="col-md-6">
                 <h5 className="font-weight-bold">{selectedItem.name}</h5>
+                <img
+                className="card-img-left listing-image"
+                src={selectedItem.picture}
+                alt={selectedItem.name}
+              />
                 <p className="my-4">{selectedItem.description}</p>
                 <h4 className="mb-4">${selectedItem.price}</h4>
                 <div className="form-group">

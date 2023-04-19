@@ -64,6 +64,7 @@ exports.addItem =  (req,res) => {
         picture: url
     })
     .then(item => {
+        item.setUser(req.body.user)
         res.status(200).send({
             message: "Item added successfully"
         })

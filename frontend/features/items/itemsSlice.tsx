@@ -35,6 +35,7 @@ export const addItem = createAsyncThunk(
     if (itemData.picture){
       formData.append('picture', itemData.picture);
     }
+    formData.append('user',JSON.stringify(itemData.user))
 
     const config = {
       headers:{

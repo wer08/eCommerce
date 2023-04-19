@@ -31,6 +31,8 @@ db.item.belongsToMany(db.cart,{
   foreignKey: "itemId",
   otherKey:"cartId"
 })
+db.item.belongsTo(db.user);
+db.user.hasMany(db.item);
 db.role.belongsToMany(db.user, {
   through: "user_roles",
   foreignKey: "roleId",

@@ -66,5 +66,6 @@ export const usersSlice = createSlice({
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUsers = (state: RootState) => state.users.users
+export const selectUser = (state: RootState, id: number) => state.users.users.find(user => user.id = id)
 
 export default usersSlice.reducer
