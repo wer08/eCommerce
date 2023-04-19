@@ -5,6 +5,7 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { getIsAuthenticated, logout, loadUser } from "../../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import ModalCart from '../../features/cart/ModalCart'
+import { clearCart } from "../../features/cart/cartSlice";
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
@@ -18,7 +19,8 @@ const Navbar = () => {
 
     const handleLogout = () => {
         setRedirect(true);
-        dispatch(logout())
+        dispatch(logout());
+        dispatch(clearCart());
     };
 
     const guestLink = () => {

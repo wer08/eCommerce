@@ -112,7 +112,7 @@ export const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem('access');
-      localStorage.removeItem('items')
+     
       state.status = "idle";
       state.isAuthenticated = false;
       state.access = null
