@@ -9,7 +9,7 @@ const ModalCart: React.FC = () => {
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      return total + item.price * item.quantity;
+      return total + item.price * item.quantityCart;
     }, 0);
   };
 
@@ -19,14 +19,14 @@ const ModalCart: React.FC = () => {
         <div className="modal-content">
           <div className="modal-body">
             {items.length > 0 ? (
-              items.map((item) => (
-                <div className="row mb-4 shadow">
+              items.map((item,idx) => (
+                <div className="row mb-4 shadow" key={idx}>
                   <div className="col p-0">
                     <div className="card">
                       <div className="card-body">
                         <h5 className="card-title">{item.name}</h5>
-                        <h6 className="card-subtitle mb-2 text-muted">${item.price} x {item.quantity}</h6>
-                        <p className="card-text">Total: ${item.price * item.quantity}</p>
+                        <h6 className="card-subtitle mb-2 text-muted">${item.price} x {item.quantityCart}</h6>
+                        <p className="card-text">Total: ${item.price * item.quantityCart}</p>
                       </div>
                     </div>
                   </div>
