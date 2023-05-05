@@ -1,14 +1,14 @@
 package com.example.backend.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity
@@ -17,6 +17,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Item
 {
+
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -24,6 +25,9 @@ public class Item
     private String description;
     private double price;
     private String picture;
-    private int UserId;
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("items")
+    private Client client;
     private int quantity;
 }

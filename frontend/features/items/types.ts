@@ -13,7 +13,7 @@ export type TItem = {
     description: string,
     price: number,
     picture: string,
-    userId: number,
+    client: User,
     quantity: number
 }
 

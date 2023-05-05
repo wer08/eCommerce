@@ -1,12 +1,17 @@
-# Use a base image with Java 17 installed
-FROM openjdk:17-jdk-alpine
+# Stage 1: Build the application
+FROM maven:3.8.4-openjdk-17 AS builder
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src/ /app/src/
+RUN mvn clean package -DskipTests
 
-# Set the working directory in the container
+# Stage 2: Create the final image
+FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
-
-# Copy the packaged JAR file to the container
-COPY target/backend-0.0.1-SNAPSHOT.jar /app/app.jar
+# Copy the compiled JAR file from the build stage
+COPY --from=builder /app/target/backend-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expose the port that the application will listen on
 EXPOSE 8090

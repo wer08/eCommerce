@@ -5,6 +5,7 @@ import com.example.backend.model.Response;
 import com.example.backend.services.implementation.ItemServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,14 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/item")
 @RequiredArgsConstructor
+@Slf4j
 public class ItemResource
 {
     private final ItemServiceImpl itemService;
 
     @GetMapping("/list")
     public ResponseEntity<Response> getItems(){
+
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())

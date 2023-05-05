@@ -6,10 +6,9 @@ import com.example.backend.services.ItemService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static org.springframework.data.domain.PageRequest.*;
@@ -30,7 +29,7 @@ public class ItemServiceImpl implements ItemService
     }
 
     @Override
-    public Collection<Item> list(int limit)
+    public List<Item> list(int limit)
     {
         log.info("Fetching all items");
         return itemRepo.findAll(of(0,limit)).toList();

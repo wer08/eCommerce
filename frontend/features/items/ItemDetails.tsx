@@ -13,7 +13,7 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
 
   const description = item.description.length > 50 ? `${item.description.slice(0,50)}...` : item.description
 
-  const owner = useAppSelector((state)=>selectUser(state, item.userId))
+  const owner = useAppSelector((state)=>selectUser(state, item.client.id))
 
   return (
     <div className="row mb-4 shadow" onClick={onClick}>

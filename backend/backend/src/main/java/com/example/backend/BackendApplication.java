@@ -25,11 +25,12 @@ public class BackendApplication {
 	@Bean
 	CommandLineRunner run(ItemRepo itemRepo, ClientRepo clientRepo){
 		return args -> {
-			clientRepo.save(new Client(null,"wer08","wojtek@mail.pl"));
-			itemRepo.save(new Item(null, "Random Item 1", "Random Description 1", 4.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg",1,10));
-			itemRepo.save(new Item(null, "Random Item 2", "Random Description 2", 19.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceed9412d0-deb3-11ed-b079-577496366379.jpg", 1,10));
-			itemRepo.save(new Item(null, "Random Item 3", "Random Description 3", 150, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", 1,5));
-			itemRepo.save(new Item(null, "Random Item 4", "Random description 4", 25.50, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", 1,25));
+			Client client = new Client(null,"wer08","wojtek@mail.pl");
+			clientRepo.save(client);
+			itemRepo.save(new Item(null, "Random Item 1", "Random Description 1", 4.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg",client,10));
+			itemRepo.save(new Item(null, "Random Item 2", "Random Description 2", 19.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceed9412d0-deb3-11ed-b079-577496366379.jpg", client,10));
+			itemRepo.save(new Item(null, "Random Item 3", "Random Description 3", 150, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", client,5));
+			itemRepo.save(new Item(null, "Random Item 4", "Random description 4", 25.50, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", client,25));
 		};
 	}
 

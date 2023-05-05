@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
+import { BlobServiceClient } from '@azure/storage-blob'
 import {TItem, TItemUpload, TItemsState} from './types'
 
 
@@ -14,28 +15,41 @@ const initialState: TItemsState = {
   error: null
 }
 
-export const getItems = createAsyncThunk('items/getItems',async ()=>{
+export const getItems = createAsyncThunk('items/list',async ()=>{
   try{
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/items/all`)
-    return res.data
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/item/list`)
+    console.log(res.data.data)
+    return res.data.data
   }catch(error:any){
     throw error.message
   }
 })
 
 export const addItem = createAsyncThunk(
-  'items/addItem',
+  'items/save',
   async (itemData: TItemUpload) => {
-    const apiUrl = `${import.meta.env.VITE_API_URL}/api/items/add`;
-
+    const apiUrl = `${import.meta.env.VITE_API_URL}/item/save`;
     const formData = new FormData();
+    if(itemData.picture){
+      const blobServiceClient = BlobServiceClient.fromConnectionString(import.meta.env.VITE_AZURE_CONNECTION_STRING);
+      const containerClient = blobServiceClient.getContainerClient('items');
+      const blobName = itemData.picture.name;
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  
+      await blockBlobClient.uploadData(itemData.picture,{
+        blobHTTPHeaders: { blobContentType: itemData.picture.type}
+      })
+
+      formData.append('picture', blockBlobClient.url)
+
+    }
+
+
+  
     formData.append('name', itemData.name);
     formData.append('description', itemData.description);
     formData.append('price', itemData.price.toString());
     formData.append('quantity', itemData.quantity.toString());
-    if (itemData.picture){
-      formData.append('picture', itemData.picture);
-    }
     formData.append('user',JSON.stringify(itemData.user))
 
     const config = {
@@ -48,7 +62,7 @@ export const addItem = createAsyncThunk(
     try {
       const res = await axios.post(apiUrl, formData,config);
 
-      return res.data;
+      return res.data.data;
     } catch (error:any) {
       throw error.message
     }

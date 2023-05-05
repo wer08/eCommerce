@@ -32,4 +32,17 @@ public class ClientResource
                         .build()
         );
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<Response> getUsers(){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("users",clientService.list()))
+                        .message("Clients retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
 }

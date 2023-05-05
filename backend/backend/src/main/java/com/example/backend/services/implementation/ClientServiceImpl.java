@@ -6,8 +6,9 @@ import com.example.backend.services.ClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -22,5 +23,11 @@ public class ClientServiceImpl implements ClientService
     public Client get(Long id)
     {
         return clientRepo.findById(id).get();
+    }
+
+    @Override
+    public List<Client> list()
+    {
+        return clientRepo.findAll().stream().toList();
     }
 }
