@@ -22,10 +22,10 @@ const initialState: usersState = {
   error: null
 }
 
-export const getUsers = createAsyncThunk('users/getUsers',async ()=>{
+export const getUsers = createAsyncThunk('user/getUsers',async ()=>{
   try{
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/all`)
-    return res.data
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/list`)
+    return res.data.data
   }catch(error:any){
     throw error.message
   }
