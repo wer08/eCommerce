@@ -31,9 +31,9 @@ export const getUsers = createAsyncThunk('user/getUsers',async ()=>{
   }
 })
 
-export const getUser = createAsyncThunk('users/getUser', async (id:number)=>{
+export const getUser = createAsyncThunk('user/getUser', async (id:number)=>{
   try{
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user?id=${id}`)
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/get/id=${id}`)
     return res.data
   }catch(error:any){
     throw error.message
