@@ -14,6 +14,8 @@ declare global {
 
 const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
+        firstName: "",
+        lastName: "",
         username: "",
         email: "",
         password: "",
@@ -23,7 +25,7 @@ const SignUp = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const isAuthenticated = useAppSelector(getIsAuthenticated)
-    const {username,email,password,rePassword} = formData;
+    const {firstName,lastName,username,email,password,rePassword} = formData;
 
 
     if(isAuthenticated){
@@ -40,6 +42,8 @@ const SignUp = () => {
                 return
             }
             dispatch(signUp({
+                firstName: firstName,
+                lastName: lastName,
                 username: username,
                 email: email,
                 password: password,
@@ -76,6 +80,18 @@ const SignUp = () => {
             <p>Create new accoutn</p>
 
             <form onSubmit={e=>onSubmit(e)} className="needs-validation" noValidate>
+                <div >
+                    <input type="text" className="form-control mb-2" placeholder="First Name" value={firstName} name='firstName' onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        Please enter your valid first Name
+                    </div>
+                </div>
+                <div >
+                    <input type="text" className="form-control mb-2" placeholder="Last Name" value={lastName} name='lastName' onChange={e=>onChange(e)} required/>
+                    <div className="invalid-feedback">
+                        Please enter valid last Name
+                    </div>
+                </div>
                 <div >
                     <input type="text" className="form-control mb-2" placeholder="Username" value={username} name='username' onChange={e=>onChange(e)} required/>
                     <div className="invalid-feedback">

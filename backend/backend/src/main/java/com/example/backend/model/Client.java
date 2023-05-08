@@ -44,6 +44,7 @@ public class Client implements UserDetails
         this.id = id;
         this.username = username;
         this.email = email;
+        this.role = Role.USER;
     }
 
     @Enumerated(STRING)

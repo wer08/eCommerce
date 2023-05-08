@@ -74,9 +74,4 @@ public class ClientServiceImpl implements ClientService
 
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-    {
-        return clientRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not Found"));
-    }
 }

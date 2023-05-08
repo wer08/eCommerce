@@ -6,10 +6,7 @@ import com.example.backend.model.Response;
 import com.example.backend.services.implementation.ClientServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Map.of;
@@ -20,10 +17,23 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class authResource
 {
-
-
     private final ClientServiceImpl clientService;
-    @PostMapping("/signup")
+
+    @GetMapping("test")
+    public  ResponseEntity<Response> test()
+    {
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("body","working"))
+                        .message("test completed")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+
+    }
+    @PostMapping("/signUp")
     public ResponseEntity<Response> register(@RequestBody RegisterRequest request)
     {
         return ResponseEntity.ok(
@@ -37,7 +47,7 @@ public class authResource
         );
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<Response> register(@RequestBody AuthenticationRequest request)
+    public ResponseEntity<Response> authenticate(@RequestBody AuthenticationRequest request)
     {
         return ResponseEntity.ok(
                 Response.builder()

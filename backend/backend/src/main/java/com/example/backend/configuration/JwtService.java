@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static io.jsonwebtoken.SignatureAlgorithm.ES256;
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
 @Service
 public class JwtService {
@@ -41,7 +42,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSignInKey(), ES256)
+                .signWith(getSignInKey(), HS256)
                 .compact()
                 ;
     }
