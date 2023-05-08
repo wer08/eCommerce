@@ -6,6 +6,8 @@ import com.example.backend.services.ClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +31,11 @@ public class ClientServiceImpl implements ClientService
     public List<Client> list()
     {
         return clientRepo.findAll().stream().toList();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        return clientRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not Found"));
     }
 }

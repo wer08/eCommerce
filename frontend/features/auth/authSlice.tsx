@@ -27,7 +27,7 @@ export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
   }
   const body = JSON.stringify({username,email,password}); 
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,body,config)
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`,body,config)
   }catch(error:any){
     throw error.message
   }
