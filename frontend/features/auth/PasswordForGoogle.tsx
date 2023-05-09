@@ -63,7 +63,7 @@ const PasswordForGoogle = () => {
                 <div className="invalid-feedback">
                     Both passwords need to be the same
                 </div>
-                <button className="btn btn-primary" type='submit'>Login</button>
+                <button className="btn btn-primary" type='submit'>SignUp</button>
             </form>
 
         </div>

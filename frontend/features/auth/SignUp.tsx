@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import {useAppDispatch,useAppSelector} from '../../hooks'
-import { TSignUpFormData } from "./types";
+import { GoogleUser, TSignUpFormData, User } from "./types";
 import{Link, useNavigate} from 'react-router-dom';
 import { getIsAuthenticated } from "./authSlice";
 import { signUp, googleAuthenticate } from "./authSlice";
 import { selectUsers } from "../users/usersSlice";
+import jwtDecode from "jwt-decode";
 
 declare global {
     interface Window {
       auth: (res: any) => void;
     }
   }
+
+let globalUsers: User[] = [];
 
 const SignUp = () => {
     const [formData,setFormData] = useState<TSignUpFormData>({
@@ -34,6 +37,10 @@ const SignUp = () => {
     if(isAuthenticated){
         navigate('/')
     }
+
+    useEffect(()=>{
+        globalUsers = users;
+    },[users])
 
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>)=>{
@@ -69,6 +76,12 @@ const SignUp = () => {
 
     window.auth = (res:any) => {
         const jwt: string = res.credential
+        const emails = globalUsers.map(user => user.email);
+        const user:GoogleUser =  jwtDecode(jwt)
+        console.log(globalUsers);
+        if(emails.includes(user.email)){
+            return
+        }
         navigate('/passwordForGoogle',{
             state: {
                 jwt: jwt
@@ -114,7 +127,7 @@ const SignUp = () => {
     return ( 
         <div className="container mt-5">
             <h1>Sign Up</h1>
-            <p>Create new accoutn</p>
+            <p>Create new account</p>
 
             <form onSubmit={e=>onSubmit(e)} className="needs-validation" noValidate>
                 <div >

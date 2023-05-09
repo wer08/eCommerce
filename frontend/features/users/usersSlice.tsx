@@ -1,16 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
+import { User } from '../auth/types'
 
-
-// Define a type for the slice state
-type TUser = {
-  username: string,
-  id: number,
-  email: string,
-}
 interface usersState{
-  users: TUser[],
+  users: User[],
   status: string,
   error: string | null | undefined
 }
