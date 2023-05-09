@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import type { authState, TArgLogin, GoogleUser, TArgSignUp, TGoogleArg} from './types'
+import type { authState, TArgLogin, GoogleUser, TArgSignUp, TGoogleArg, TSignUpFormData} from './types'
 import jwtDecode from 'jwt-decode'
 axios.defaults.withCredentials = true;
 
@@ -18,16 +18,22 @@ const initialState: authState = {
     user: null
 }
 
-export const signUp = createAsyncThunk('auth/signUp', async(arg:TArgSignUp)=>{
-  const {username,email,password} = arg;
+export const signUp = createAsyncThunk('auth/signUp', async(arg:TSignUpFormData)=>{
   const config = {
     headers: {
         'Content-Type': 'application/json'
     }
   }
-  const body = JSON.stringify({username,email,password}); 
+  const {firstName,lastName,username,email,password,rePassword} = arg
+  const body = JSON.stringify({
+    firstName,
+    lastName,
+    username,
+    email,
+    password
+  }); 
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`,body,config)
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signUp`,body,config)
   }catch(error:any){
     throw error.message
   }
@@ -67,7 +73,7 @@ export const login = createAsyncThunk('auth/login', async (arg:TArgLogin) => {
   const body = JSON.stringify({username, password});
 
   try{
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signin`,body,config);
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,body,config);
     return response.data
   }catch(error: any){
     throw error.message;
@@ -147,11 +153,11 @@ export const authSlice = createSlice({
 
     builder
       .addMatcher(isAnyOf(login.fulfilled), (state,action) => {
-        localStorage.setItem('access',action.payload.accessToken);
+        localStorage.setItem('access',action.payload.data.token);
         state.status = 'succeeded'
         state.isAuthenticated = true
-        state.access = action.payload.accessToken
-        state.user = action.payload.user
+        state.access = action.payload.data.token
+        state.user = action.payload.data.user
         state.error = null
       })
 

@@ -18,4 +18,6 @@ public interface ClientService
 
     String authenticate(AuthenticationRequest request);
 
+    Client get(String token);
+
 }

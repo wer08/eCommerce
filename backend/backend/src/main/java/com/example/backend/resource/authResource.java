@@ -6,6 +6,7 @@ import com.example.backend.model.Response;
 import com.example.backend.services.implementation.ClientServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import static java.time.LocalDateTime.now;
@@ -18,6 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class authResource
 {
     private final ClientServiceImpl clientService;
+    private final UserDetailsService userDetailsService;
 
     @GetMapping("test")
     public  ResponseEntity<Response> test()
@@ -40,20 +42,34 @@ public class authResource
                 Response.builder()
                         .timeStamp(now())
                         .data(of("token",clientService.register(request)))
-                        .message("Client retrieved")
+                        .message("Client created")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()
         );
     }
-    @PostMapping("/authenticate")
-    public ResponseEntity<Response> authenticate(@RequestBody AuthenticationRequest request)
+    @PostMapping("/login")
+    public ResponseEntity<Response> login(@RequestBody AuthenticationRequest request)
     {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(of("token",clientService.authenticate(request)))
-                        .message("Client retrieved")
+                        .data(of("token",clientService.authenticate(request),"user",userDetailsService.loadUserByUsername(request.getUsername())))
+                        .message("Client logged in")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @PostMapping("/loadUser")
+    public ResponseEntity<Response> loadUser(@RequestBody String token)
+    {
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("user",clientService.get(token)))
+                        .message("Client loaded")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()

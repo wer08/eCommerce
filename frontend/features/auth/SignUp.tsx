@@ -41,13 +41,7 @@ const SignUp = () => {
             if(password != rePassword){
                 return
             }
-            dispatch(signUp({
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                email: email,
-                password: password,
-            })).then(()=>navigate('/login'))
+            dispatch(signUp(formData)).then(()=>navigate('/login'))
         }
         else{
             console.log('valid')

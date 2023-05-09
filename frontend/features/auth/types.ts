@@ -1,3 +1,5 @@
+import { TItem } from "../items/types"
+
 // Define a type for the slice state
 export interface authState {
     access: string | null,
@@ -18,6 +20,10 @@ export type TArgSignUp = {
   email: string,
   password:string
 }
+export enum ROLE {
+  USER = "USER",
+  ADMIN = "ADMIN"
+}
 
 export type TArgActivate = {
     key: string
@@ -31,7 +37,17 @@ export type TArgPassConfirm = {
 export type User = {
     username: string,
     email: string,
-    id: number
+    id: number,
+    firstName: string,
+    lastName: string,
+    password: string,
+    items: TItem[],
+    role: ROLE,
+    enabled: boolean,
+    accountNonExpired: boolean,
+    credentialsNonExpired: boolean
+    accountNonLocked: boolean,
+    authorities: []
 }
 export type TSignUpFormData = {
   firstName: string,

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import static com.example.backend.model.Role.USER;
 public class ClientServiceImpl implements ClientService
 {
     private final ClientRepo clientRepo;
+    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -72,6 +74,15 @@ public class ClientServiceImpl implements ClientService
                 .orElseThrow();
         return jwtService.generateToken(user);
 
+    }
+
+    @Override
+    public Client get(String token)
+    {
+        String username = jwtService.extractUsername(token);
+        Client client = clientRepo.findByUsername(username).get();
+
+        return client;
     }
 
 }
