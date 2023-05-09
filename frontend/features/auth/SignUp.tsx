@@ -89,7 +89,6 @@ const SignUp = () => {
             }
             else{
                 input.classList.remove('is-invalid')
-                input.classList.add('is-valid')
             }
 
         }
