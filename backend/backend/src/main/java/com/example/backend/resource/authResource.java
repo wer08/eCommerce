@@ -62,8 +62,8 @@ public class authResource
         );
     }
 
-    @PostMapping("/loadUser")
-    public ResponseEntity<Response> loadUser(@RequestBody String token)
+    @GetMapping("/loadUser")
+    public ResponseEntity<Response> loadUser(@RequestHeader("Jwt-Token") String token)
     {
         return ResponseEntity.ok(
                 Response.builder()

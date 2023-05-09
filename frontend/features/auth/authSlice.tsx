@@ -90,12 +90,12 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
     const config = {
       headers: {
           'Content-Type': 'application/json',
-          'x-access-token': `${token}`,
+          'Jwt-Token': `${token}`,
           'Accept': 'application/json',
       }
   };
     try{
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/test/user/`,config)
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/loadUser`,config)
       return res.data
 
     }
@@ -141,7 +141,7 @@ export const authSlice = createSlice({
       .addCase(loadUser.fulfilled, (state,action) => {
         state.status = 'succeeded'
         state.isAuthenticated = true
-        state.user = action.payload
+        state.user = action.payload.data.user
       })
       .addCase(loadUser.rejected, (state,action) => {
           localStorage.removeItem('access')
