@@ -43,18 +43,20 @@ export const googleAuthenticate = createAsyncThunk('auth/google', async (arg: TG
   const {jwt,password} = arg
   const user:GoogleUser = jwtDecode(jwt)
   const body = {
-    username: user.name,
+    username: user.email,
     email: user.email,
-    password: password
+    password: password,
+    firstName: user.given_name,
+    lastName: user.family_name
   }
-  console.log(body)
+  console.log(user)
   const config = {
     headers: {
         'Content-Type': 'application/json'
     }
   }
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`,body,config)
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signUp`,body,config)
   }catch(error:any){
     throw error.message
   }

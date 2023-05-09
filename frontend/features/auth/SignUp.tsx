@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {useAppDispatch,useAppSelector} from '../../hooks'
 import { TSignUpFormData } from "./types";
 import{Link, useNavigate} from 'react-router-dom';
 import { getIsAuthenticated } from "./authSlice";
 import { signUp, googleAuthenticate } from "./authSlice";
-import axios from "axios";
+import { selectUsers } from "../users/usersSlice";
 
 declare global {
     interface Window {
@@ -21,10 +21,13 @@ const SignUp = () => {
         password: "",
         rePassword: ""
     });
+    const emailInput = useRef(null);
+    const usernameInput = useRef(null);
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const isAuthenticated = useAppSelector(getIsAuthenticated)
+    const users = useAppSelector(selectUsers)
     const {firstName,lastName,username,email,password,rePassword} = formData;
 
 
@@ -53,6 +56,12 @@ const SignUp = () => {
     
     const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         const field = e.target.name;
+        if(field === 'username'){
+            checkUsernameExistence(e.target.value);
+        }
+        if(field === 'email'){
+            checkEmailExistence(e.target.value);
+        }
         setFormData({...formData, [field]: e.target.value})
     }
 
@@ -66,6 +75,41 @@ const SignUp = () => {
             }
         })
         
+    }
+
+
+
+    const checkUsernameExistence = (username:string): void => {
+        const usernames = users.map(user => user.username)
+        if(usernameInput.current){
+            const input = usernameInput.current as HTMLInputElement
+            if(usernames.includes(username)){
+                
+                input.classList.add('is-invalid')
+            }
+            else{
+                input.classList.remove('is-invalid')
+                input.classList.add('is-valid')
+            }
+
+        }
+    }
+
+    const checkEmailExistence = (email:string): void  => {
+        const emails = users.map(user => user.email)
+        if(emailInput.current){
+            const input = emailInput.current as HTMLInputElement
+            if(emails.includes(email)){
+                input.setCustomValidity("Email already in the database");
+                input.classList.add('is-invalid')
+            }
+            else{
+                input.setCustomValidity("");
+                input.classList.remove('is-invalid')
+                
+            }
+
+        }
     }
 
     return ( 
@@ -87,13 +131,30 @@ const SignUp = () => {
                     </div>
                 </div>
                 <div >
-                    <input type="text" className="form-control mb-2" placeholder="Username" value={username} name='username' onChange={e=>onChange(e)} required/>
+                    <input 
+                        type="text" 
+                        className="form-control mb-2" 
+                        placeholder="Username" 
+                        value={username} 
+                        name='username' 
+                        onChange={e=>onChange(e)} 
+                        ref={usernameInput}
+                        required/>
                     <div className="invalid-feedback">
                         Please choose a username.
                     </div>
                 </div>
                 <div >
-                    <input type="email" className="form-control mb-2" placeholder="Email" value={email} name='email' onChange={e=>onChange(e)} required/>
+                    <input 
+                        type="email" 
+                        className="form-control mb-2" 
+                        placeholder="Email" 
+                        value={email} 
+                        name='email' 
+                        onChange={e=>onChange(e)} 
+                        ref={emailInput}
+                        required/>
+
                     <div className="invalid-feedback">
                         Please choose an email.
                     </div>
