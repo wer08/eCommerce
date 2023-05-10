@@ -14,11 +14,12 @@ const PasswordForGoogle = () => {
 
     const location = useLocation();
     const code:string = location.state.jwt;
-    useEffect(()=>{
-        // console.log(code)
-    },[])
 
-    
+    if (isAuthenticated)
+    {
+        return <Navigate to='/'></Navigate>
+    }
+
 
     // Using useAppDispatch hook to create a dispatch function
     const dispatch = useAppDispatch()

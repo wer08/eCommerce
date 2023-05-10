@@ -6,6 +6,7 @@ import { getIsAuthenticated } from "./authSlice";
 import { signUp, googleAuthenticate } from "./authSlice";
 import { selectUsers } from "../users/usersSlice";
 import jwtDecode from "jwt-decode";
+import GoogleButton from "./GoogleButton"
 
 declare global {
     interface Window {
@@ -78,7 +79,6 @@ const SignUp = () => {
         const jwt: string = res.credential
         const emails = globalUsers.map(user => user.email);
         const user:GoogleUser =  jwtDecode(jwt)
-        console.log(globalUsers);
         if(emails.includes(user.email)){
             return
         }
@@ -185,22 +185,7 @@ const SignUp = () => {
                 </div>
                 <button className="btn btn-primary" type='submit'>Sign Up</button>
                 </form>
-                <div id="g_id_onload"
-                    data-client_id="726797131514-gpuj32fjc3on3l0man3krslmp967nldq.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-ux_mode="popup"
-                    data-callback="auth"
-                    data-auto_prompt="false">
-                </div>
-
-                <div className="g_id_signin"
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="signup_with,"
-                    data-size="large"
-                    data-logo_alignment="left">
-                </div>
+                <GoogleButton />
 
 
                 <p className="mt-3">

@@ -49,14 +49,15 @@ export const googleAuthenticate = createAsyncThunk('auth/google', async (arg: TG
     firstName: user.given_name,
     lastName: user.family_name
   }
-  console.log(user)
   const config = {
     headers: {
         'Content-Type': 'application/json'
     }
   }
   try{
-    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signUp`,body,config)
+    const jwt = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signUp`,body,config)
+    const response =  await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,JSON.stringify({username: user.email, password: password}),config);
+    return response.data;
   }catch(error:any){
     throw error.message
   }
@@ -136,10 +137,6 @@ export const authSlice = createSlice({
         state.status = 'success'
         state.isAuthenticated = false
       })
-      .addCase(googleAuthenticate.fulfilled,(state,action)=>{
-        state.status = 'success'
-        state.isAuthenticated = false
-      })
       .addCase(loadUser.fulfilled, (state,action) => {
         state.status = 'succeeded'
         state.isAuthenticated = true
@@ -154,7 +151,7 @@ export const authSlice = createSlice({
       })
 
     builder
-      .addMatcher(isAnyOf(login.fulfilled), (state,action) => {
+      .addMatcher(isAnyOf(login.fulfilled, googleAuthenticate.fulfilled), (state,action) => {
         localStorage.setItem('access',action.payload.data.token);
         state.status = 'succeeded'
         state.isAuthenticated = true
