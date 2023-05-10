@@ -4,13 +4,14 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
 import { useNavigate } from "react-router";
-import { getUser } from "../auth/authSlice";
+import { getIsAuthenticated, getUser } from "../auth/authSlice";
 import { Navigate } from "react-router-dom";
 
 
 
 const AddItem = () => {
-    const currentUser = useAppSelector(getUser)
+    const currentUser = useAppSelector(getUser);
+    const isAuthenticated = useAppSelector(getIsAuthenticated);
 
     // Define state for form data
     const [formData, setFormData] = useState<TItemUpload>({
@@ -22,13 +23,9 @@ const AddItem = () => {
         quantity: 1
     });
 
+
+
     const navigate = useNavigate();
-
-    if(!currentUser){
-        <Navigate to="/" />
-    }
-
-
     
     const dispatch = useAppDispatch()
 
@@ -51,9 +48,8 @@ const AddItem = () => {
 
         // Set the validated state to true to enable the Bootstrap validation feedback styles
         setValidated(true);
-        console.log(formData);
         dispatch(addItem(formData));
-        navigate("/");
+        // navigate("/");
         
     }
 
@@ -75,6 +71,13 @@ const AddItem = () => {
             })
         }
     }
+
+    useEffect(()=>{
+        if(!isAuthenticated){
+            navigate("/");
+        }
+
+    },[isAuthenticated])
 
     // Render the form
     return ( 

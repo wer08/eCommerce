@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob'
+import { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob'
 import {TItem, TItemUpload, TItemsState} from './types'
 
 
@@ -14,6 +14,7 @@ const initialState: TItemsState = {
   currentCart: [],
   error: null
 }
+
 
 export const getItems = createAsyncThunk('items/list',async ()=>{
   try{
@@ -29,16 +30,37 @@ export const addItem = createAsyncThunk(
   async (itemData: TItemUpload) => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/item/save`;
     let body = {};
+    console.log(import.meta.env.VITE_AZURE_SAS_TOKEN);
     if(itemData.picture){
-      const blobServiceClient = BlobServiceClient.fromConnectionString(import.meta.env.VITE_AZURE_CONNECTION_STRING);
-      const containerClient = blobServiceClient.getContainerClient('items');
-      const blobName = itemData.picture.name;
-      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-  
-      await blockBlobClient.uploadData(itemData.picture,{
-        blobHTTPHeaders: { blobContentType: itemData.picture.type}
-      })
-      body = {...body, picture: blockBlobClient.url}
+      
+      const sasToken = import.meta.env.VITE_AZURE_SAS_TOKEN;
+      const containerName = 'items';
+      const storageAccountName = 'wojtekstorage'
+      const fileName = itemData.picture.name;
+      const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;
+      const blobUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${fileName}`;
+      console.log(uploadUrl);
+
+      try{
+              
+        // get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal
+        const blobService = new BlobServiceClient(uploadUrl);
+        
+        // get Container - full public read access
+        const containerClient: ContainerClient = blobService.getContainerClient(containerName);
+
+        const blobClient = containerClient.getBlockBlobClient(fileName);
+
+        const options = { blobHTTPHeaders: { blobContentType: itemData.picture.type } };
+
+        await blobClient.uploadData(itemData.picture, options);
+
+      }catch(e:any){
+        console.log(e);
+      }
+      body= {...body,picture: blobUrl}
+
+
 
     }
     else{
