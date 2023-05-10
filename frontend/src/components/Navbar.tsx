@@ -5,13 +5,14 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { getIsAuthenticated, logout, loadUser } from "../../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import ModalCart from '../../features/cart/ModalCart'
-import { clearCart } from "../../features/cart/cartSlice";
+import { clearCart, getNumberOfItems } from "../../features/cart/cartSlice";
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const isAuthenticated = useAppSelector(getIsAuthenticated)
     const dispatch = useAppDispatch()
+    const size = useAppSelector(getNumberOfItems)
 
     useEffect(()=>{
         dispatch(loadUser())
@@ -83,7 +84,13 @@ const Navbar = () => {
                         </li>
                         {isAuthenticated ? authLinks() : guestLink()}
                     </ul>
-                    {isAuthenticated && <FontAwesomeIcon className="navbar-text ms-auto me-5 cart" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>}
+                    {isAuthenticated && 
+                    <>
+                    <FontAwesomeIcon className="navbar-text ms-auto me-2 cart position-relative" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>
+                        <span className="translate-middle badge rounded-pill bg-danger">
+                            {size}
+                        <span className="visually-hidden">empty cart</span>
+                        </span></> }
                 </div>
             </nav>
             {modalIsOpen && <ModalCart />}

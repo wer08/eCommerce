@@ -25,7 +25,6 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
     e.preventDefault()
     const form = e.currentTarget
     if(form.checkValidity()){
-      myModal.toggle()
       const item = { ...selectedItem, quantityCart };
       dispatch(addItem(item));
 
