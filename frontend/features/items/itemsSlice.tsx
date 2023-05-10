@@ -39,8 +39,10 @@ export const addItem = createAsyncThunk(
         blobHTTPHeaders: { blobContentType: itemData.picture.type}
       })
       body = {...body, picture: blockBlobClient.url}
-      console.log(`body before addition: ${body}`);
 
+    }
+    else{
+      body = {...body,picture: "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg"}
     }
     body = {
       name: itemData.name,
