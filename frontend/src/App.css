@@ -18,3 +18,12 @@
 .card{
     flex-direction: row;
 }
+
+.delete{
+
+    cursor: pointer;
+}
+.delete:hover{
+
+    transform: scale(1.2);
+}

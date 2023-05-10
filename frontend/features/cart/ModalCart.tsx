@@ -1,17 +1,22 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faArrowRight, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addItem, selectItems } from "./cartSlice";
+import { addItem, removeItem, selectItems } from "./cartSlice";
+import ItemInCart from "./ItemInCart"
 
 const ModalCart: React.FC = () => {
   const items = useAppSelector(selectItems);
 
+  const dispatch = useAppDispatch()
+
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      return total + item.price * item.quantityCart;
+      return total + parseFloat((item.price * item.quantityCart).toFixed(2));
     }, 0);
   };
+
+
 
   return (
     <div className="modal fade" id="cartModal" tabIndex={-1} role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
@@ -20,17 +25,10 @@ const ModalCart: React.FC = () => {
           <div className="modal-body">
             {items.length > 0 ? (
               items.map((item,idx) => (
-                <div className="row mb-4 shadow" key={idx}>
-                  <div className="col p-0">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">{item.name}</h5>
-                        <h6 className="card-subtitle mb-2 text-muted">${item.price} x {item.quantityCart}</h6>
-                        <p className="card-text">Total: ${item.price * item.quantityCart}</p>
-                      </div>
-                    </div>
-                  </div>
+                <div key={idx}>
+                  <ItemInCart item = {item} />
                 </div>
+
               ))
             ) : (
               <div className="row mb-4 shadow">
