@@ -27,7 +27,7 @@ public class Item
     private String picture;
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties("items")
+    @JsonIgnoreProperties({"items","authorities"})
     private Client client;
     private int quantity;
 }

@@ -11,10 +11,8 @@ interface Props{
 
 const Layout = ({children}:Props) => {
     const dispatch = useAppDispatch()
-    const user = useAppSelector(getUser)
 
     useEffect(()=>{
-        console.log(user)
         dispatch(loadUser())
         dispatch(getUsers())
     },[dispatch])

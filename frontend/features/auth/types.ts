@@ -21,8 +21,8 @@ export type TArgSignUp = {
   password:string
 }
 export enum ROLE {
-  USER = "USER",
-  ADMIN = "ADMIN"
+  USER,
+  ADMIN
 }
 
 export type TArgActivate = {
@@ -47,7 +47,6 @@ export type User = {
     accountNonExpired: boolean,
     credentialsNonExpired: boolean
     accountNonLocked: boolean,
-    authorities: []
 }
 export type TSignUpFormData = {
   firstName: string,

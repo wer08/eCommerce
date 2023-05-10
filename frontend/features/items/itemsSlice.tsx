@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import { BlobServiceClient } from '@azure/storage-blob'
+import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob'
 import {TItem, TItemUpload, TItemsState} from './types'
 
 
@@ -18,7 +18,6 @@ const initialState: TItemsState = {
 export const getItems = createAsyncThunk('items/list',async ()=>{
   try{
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/item/list`)
-    console.log(res.data.data)
     return res.data.data
   }catch(error:any){
     throw error.message
@@ -29,7 +28,7 @@ export const addItem = createAsyncThunk(
   'items/save',
   async (itemData: TItemUpload) => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/item/save`;
-    const formData = new FormData();
+    let body = {};
     if(itemData.picture){
       const blobServiceClient = BlobServiceClient.fromConnectionString(import.meta.env.VITE_AZURE_CONNECTION_STRING);
       const containerClient = blobServiceClient.getContainerClient('items');
@@ -39,28 +38,30 @@ export const addItem = createAsyncThunk(
       await blockBlobClient.uploadData(itemData.picture,{
         blobHTTPHeaders: { blobContentType: itemData.picture.type}
       })
-
-      formData.append('picture', blockBlobClient.url)
+      body = {...body, picture: blockBlobClient.url}
+      console.log(`body before addition: ${body}`);
 
     }
+    body = {
+      name: itemData.name,
+      description: itemData.description,
+      price: itemData.price,
+      quantity: itemData.quantity,
+      client: itemData.user,
+      ...body
+    }
 
-
-  
-    formData.append('name', itemData.name);
-    formData.append('description', itemData.description);
-    formData.append('price', itemData.price.toString());
-    formData.append('quantity', itemData.quantity.toString());
-    formData.append('user',JSON.stringify(itemData.user))
 
     const config = {
       headers:{
-        'enctype': "multipart/form-data"
+        'content-type': "application/json"
       }
 
     }
-
+    console.log(body);
     try {
-      const res = await axios.post(apiUrl, formData,config);
+      
+      const res = await axios.post(apiUrl,body,config);
 
       return res.data.data;
     } catch (error:any) {

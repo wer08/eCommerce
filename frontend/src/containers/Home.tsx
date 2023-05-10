@@ -12,7 +12,6 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
 
   const handleClick = (item:TItem) => {
-    console.log(item.name)
     setSelectedItem(item);
   };
 

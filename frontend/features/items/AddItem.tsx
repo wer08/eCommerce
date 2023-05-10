@@ -5,6 +5,7 @@ import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
 import { useNavigate } from "react-router";
 import { getUser } from "../auth/authSlice";
+import { Navigate } from "react-router-dom";
 
 
 
@@ -22,6 +23,10 @@ const AddItem = () => {
     });
 
     const navigate = useNavigate();
+
+    if(!currentUser){
+        <Navigate to="/" />
+    }
 
 
     
@@ -46,7 +51,7 @@ const AddItem = () => {
 
         // Set the validated state to true to enable the Bootstrap validation feedback styles
         setValidated(true);
-
+        console.log(formData);
         dispatch(addItem(formData));
         navigate("/");
         

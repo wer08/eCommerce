@@ -25,6 +25,7 @@ public class ItemServiceImpl implements ItemService
     public Item create(Item item)
     {
         log.info("Added new item: {}",item.getName());
+
         return itemRepo.save(item);
     }
 
