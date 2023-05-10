@@ -67,9 +67,6 @@ const Navbar = () => {
         setModalIsOpen(true)
     }
 
-
-
-
     return ( 
         <>
             <nav className="navbar navbar-expand-lg navbar-dark p-2" style={{backgroundColor: '#cf9013'}}>
@@ -87,10 +84,12 @@ const Navbar = () => {
                     {isAuthenticated && 
                     <>
                     <FontAwesomeIcon className="navbar-text ms-auto me-2 cart position-relative" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>
+                    {size>0 &&
                         <span className="translate-middle badge rounded-pill bg-danger">
                             {size}
-                        <span className="visually-hidden">empty cart</span>
-                        </span></> }
+                        </span>
+                    }
+                    </> }
                 </div>
             </nav>
             {modalIsOpen && <ModalCart />}
