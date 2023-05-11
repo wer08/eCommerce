@@ -93,6 +93,7 @@ export const addItem = createAsyncThunk(
       price: itemData.price,
       quantity: itemData.quantity,
       client: itemData.client,
+      category: itemData.category,
       ...body
     }
 

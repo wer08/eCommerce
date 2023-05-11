@@ -1,6 +1,16 @@
 import { TypedUseSelectorHook } from "react-redux"
 import { User } from "../auth/types"
 
+export enum Category {
+    FURNITURE = 'Furniture',
+    RTV = 'Rtv',
+    AGD = 'Agd',
+    HOME = 'Home',
+    ITEM = 'Item',
+    GROCERY = 'Grocery',
+    NO_CATEGORY = 'No category'
+}
+
 export type TItemsState = {
     items: Array<TItem>,
     filteredItems: Array<TItem>,
@@ -17,6 +27,7 @@ export type TItem = {
     picture: string,
     client: User,
     quantity: number
+    category: Category
 }
 
 export type TItemUpload = {
@@ -26,6 +37,7 @@ export type TItemUpload = {
     price: number,
     picture: Blob | null,
     quantity: number
+    category: Category
 }
 
 export type TBody = {
@@ -34,5 +46,6 @@ export type TBody = {
     description: string,
     price: number | null,
     picture: string | null,
-    quantity: number | null
+    quantity: number | null,
+    category: Category
 }

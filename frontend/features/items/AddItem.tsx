@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TItem, TItemUpload } from "./types";
+import { Category, TItem, TItemUpload } from "./types";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "./itemsSlice";
 import pcloudSdk from 'pcloud-sdk-js';
@@ -20,10 +20,12 @@ const AddItem = () => {
         price: 0,
         picture: null,
         client: currentUser,
-        quantity: 1
+        quantity: 1,
+        category: Category.NO_CATEGORY
     });
 
 
+    const categories = Object.values(Category);
 
     const navigate = useNavigate();
     
@@ -33,7 +35,7 @@ const AddItem = () => {
     const [validated, setValidated] = useState(false);
 
     // Destructure form data properties
-    const {name, description, price, picture, client, quantity} = formData;
+    const {name, description, price, picture, client, quantity, category} = formData;
 
     // Define function to handle form submission
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
@@ -70,6 +72,13 @@ const AddItem = () => {
                 [e.target.name]: file
             })
         }
+    }
+
+    const handleSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.currentTarget.value
+        })
     }
 
     useEffect(()=>{
@@ -110,6 +119,18 @@ const AddItem = () => {
                     <div className="input-group">
                         <input type="number" name="quantity" value={quantity} onChange={e=>handleChange(e)} className="form-control" min="1" required />
                         <div className="invalid-feedback">Please enter a valid quantity.</div>
+                    </div>
+                </div>
+
+                
+                {/* Define the category input field */}
+                <div className="col-md-6">
+                    <label htmlFor="categoryt" className="form-label">Category:</label>
+                    <div className="input-group">
+                        <select name="category" value={category} onChange={e=>handleSelect(e)} className="form-control">
+                            {categories.map(category=><option value={category}>{category}</option>)}
+                        </select>
+                        <div className="invalid-feedback">Please enter a valid category.</div>
                     </div>
                 </div>
 

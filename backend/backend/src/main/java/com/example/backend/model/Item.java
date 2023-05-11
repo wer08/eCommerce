@@ -25,6 +25,7 @@ public class Item
     private String description;
     private double price;
     private String picture;
+    private Category category;
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties({"items","authorities"})
