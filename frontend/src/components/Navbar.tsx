@@ -1,15 +1,17 @@
 import { Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { getIsAuthenticated, logout, loadUser } from "../../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import ModalCart from '../../features/cart/ModalCart'
 import { clearCart, getNumberOfItems } from "../../features/cart/cartSlice";
+import { filterItems } from "../../features/items/itemsSlice";
 const Navbar = () => {
 
     const [redirect, setRedirect] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [search, setSearch] = useState("");
     const isAuthenticated = useAppSelector(getIsAuthenticated)
     const dispatch = useAppDispatch()
     const size = useAppSelector(getNumberOfItems)
@@ -47,7 +49,7 @@ const Navbar = () => {
                     <Link className="nav-link click" to="/profile">Profile</Link>
                 </li>
                 <li className="nav_item">
-                    <Link className="nav-link click" to="/addItem">Add item</Link>
+                    <Link className="nav-link click" to="/addItem">Add</Link>
                 </li>
             </>
 
@@ -67,6 +69,12 @@ const Navbar = () => {
         setModalIsOpen(true)
     }
 
+    const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.currentTarget.value)
+        dispatch(filterItems(e.currentTarget.value))
+    }
+
+
     return ( 
         <>
             <nav className="navbar navbar-expand-lg navbar-dark p-2" style={{backgroundColor: '#cf9013'}}>
@@ -80,10 +88,16 @@ const Navbar = () => {
                             <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
                         </li>
                         {isAuthenticated ? authLinks() : guestLink()}
+                        <form className="input-group input-group-sm">
+                            <span className="input-group-text" id="glass"><FontAwesomeIcon icon={faMagnifyingGlass} /></span>
+                            <input type="text" className="form-control-sm" placeholder="Search..." value={search} onChange={(e) => handleSearch(e)} aria-describedby="glass"></input>
+                        </form>
+
                     </ul>
                     {isAuthenticated && 
                     <>
-                    <FontAwesomeIcon className="navbar-text ms-auto me-2 cart position-relative" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>
+                    
+                    <FontAwesomeIcon className="navbar-text me-2 ms-auto cart position-relative" icon={faCartShopping}  onClick={onClick} data-bs-toggle="modal" data-bs-target="#cartModal"/>
                     {size>0 &&
                         <span className="translate-middle badge rounded-pill bg-danger">
                             {size}

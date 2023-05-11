@@ -3,6 +3,7 @@ import { User } from "../auth/types"
 
 export type TItemsState = {
     items: Array<TItem>,
+    filteredItems: Array<TItem>,
     currentCart: Array<TItem>
     status: string,
     error: string | null | undefined

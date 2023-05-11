@@ -19,7 +19,7 @@ const AddItem = () => {
         description: "",
         price: 0,
         picture: null,
-        user: currentUser,
+        client: currentUser,
         quantity: 1
     });
 
@@ -33,7 +33,7 @@ const AddItem = () => {
     const [validated, setValidated] = useState(false);
 
     // Destructure form data properties
-    const {name, description, price, picture, user, quantity} = formData;
+    const {name, description, price, picture, client, quantity} = formData;
 
     // Define function to handle form submission
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {

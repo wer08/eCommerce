@@ -10,6 +10,7 @@ import {TBody, TItem, TItemUpload, TItemsState} from './types'
 // Define the initial state using that type
 const initialState: TItemsState = {
   items: [],
+  filteredItems: [],
   status: "idle",
   currentCart: [],
   error: null
@@ -120,13 +121,19 @@ export const itemsSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    filterItems(state,action){
+      const items = state.items.map(item=>item as TItem);
+      const filtered = items.filter(item => item.name.toLowerCase().includes(action.payload.toLowerCase()))
+      state.filteredItems = filtered
+    }
 
   },
   extraReducers(builder) {
     builder
     .addCase(getItems.fulfilled,(state,action)=>{
-      state.status = 'success'
-      state.items = action.payload.items
+      state.status = 'success';
+      state.items = action.payload.items;
+      state.filteredItems = action.payload.items;
     })
     .addCase(getItems.pending,(state,action)=>{
       state.status = 'pending'
@@ -164,9 +171,12 @@ export const itemsSlice = createSlice({
   },
 })
 
+export const { filterItems } = itemsSlice.actions;
+
 
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectItems = (state: RootState) => state.items.items
+export const selectFilteredItems = (state: RootState) => state.items.filteredItems
 
 export default itemsSlice.reducer

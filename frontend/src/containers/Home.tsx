@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import "../App.css";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getItems, selectItems } from "../../features/items/itemsSlice";
+import { getItems, selectItems, selectFilteredItems } from "../../features/items/itemsSlice";
 import ItemDetails from "../../features/items/ItemDetails";
 import Modal from "../../features/items/Modal";
 import { TItem } from "../../features/items/types";
 
 const Home = () => {
-  const items = useAppSelector(selectItems);
+  const items = useAppSelector(selectFilteredItems);
   const reversed = [...items].reverse();
   const dispatch = useAppDispatch();
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
