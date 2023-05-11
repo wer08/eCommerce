@@ -24,7 +24,7 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
     e.preventDefault()
     const form = e.currentTarget
     if(form.checkValidity()){
-      const item = { ...selectedItem, quantityCart };
+      const item = { item: selectedItem, quantityCart };
       const newQuantity = selectedItem.quantity - quantityCart;
       const itemToUpdate = {...selectedItem, quantity: newQuantity}
       dispatch(addItem(item));

@@ -8,6 +8,7 @@ import { TItem } from "../../features/items/types";
 
 const Home = () => {
   const items = useAppSelector(selectItems);
+  const reversed = [...items].reverse();
   const dispatch = useAppDispatch();
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
 
@@ -23,7 +24,7 @@ const Home = () => {
   return (
     <div className="container mt-5">
       <div className="row row-cols-1 g-4">
-        {items.map((item, idx) => (
+        {reversed.map((item, idx) => (
           <div key={idx} className="col item"  data-bs-toggle="modal" data-bs-target="#itemModal">
             
             <ItemDetails item={item} onClick={()=>handleClick(item)}/>

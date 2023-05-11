@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -34,7 +35,8 @@ public class ItemServiceImpl implements ItemService
     public List<Item> list(int limit)
     {
         log.info("Fetching all items");
-        return itemRepo.findAll(of(0,limit)).toList();
+        List<Item> items = itemRepo.findAll(of(0,limit)).toList();
+        return items;
     }
 
     @Override

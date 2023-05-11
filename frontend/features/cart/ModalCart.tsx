@@ -12,7 +12,7 @@ const ModalCart: React.FC = () => {
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      return total + parseFloat((item.price * item.quantityCart).toFixed(2));
+      return total + parseFloat((item.item.price * item.quantityCart).toFixed(2));
     }, 0);
   };
 

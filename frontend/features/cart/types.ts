@@ -1,6 +1,6 @@
+import { TItem } from "../items/types"
+
 export type TItemInCart = {
-    name: string,
-    id: number,
-    price: number,
+    item: TItem
     quantityCart: number
 }
