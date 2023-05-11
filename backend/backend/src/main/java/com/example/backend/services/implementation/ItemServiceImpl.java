@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService
     @Override
     public Item update(Item item)
     {
-        log.info("Saving item id: {}",item.getId());
+        log.info("Updating item id: {}",item.getId());
         return itemRepo.save(item);
     }
 

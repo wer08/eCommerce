@@ -35,6 +35,9 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
                 ${item.price}
             </h6>
             <p className="card-text">{description}</p>
+            <h6 className="card-subtitle mb-2 text-muted">
+              Quantity: {item.quantity}
+            </h6>
             </div>
         </div>
         </div>

@@ -50,6 +50,20 @@ public class ItemResource
         );
     }
 
+
+    @PutMapping("/update")
+    public ResponseEntity<Response> updateItem(@RequestBody @Valid Item item){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("item",itemService.update(item)))
+                        .message("Item updated")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
     @GetMapping("/get/{id}")
     public ResponseEntity<Response> getItem(@PathVariable("id") Long id){
         return ResponseEntity.ok(
@@ -64,7 +78,7 @@ public class ItemResource
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteServer(@PathVariable("id") Long id){
+    public ResponseEntity<Response> deleteItem(@PathVariable("id") Long id){
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TItemInCart } from './types';
 import type { RootState } from '../../store'
+import { update } from '../items/itemsSlice';
 
 interface CartState {
   items: TItemInCart[];
@@ -25,6 +26,7 @@ const cartSlice = createSlice({
         state.items.push(newItem);
       }
       localStorage.setItem('items',JSON.stringify(state.items))
+      update();
     },
     removeItem(state, action) {
       const itemId = action.payload;

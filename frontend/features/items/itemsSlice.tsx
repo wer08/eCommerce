@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
 import { BlobServiceClient, BlockBlobClient, ContainerClient } from '@azure/storage-blob'
-import {TItem, TItemUpload, TItemsState} from './types'
+import {TBody, TItem, TItemUpload, TItemsState} from './types'
 
 
 
@@ -15,6 +15,15 @@ const initialState: TItemsState = {
   error: null
 }
 
+export const update = createAsyncThunk('items/update', async (item: TItemUpload)=>{
+  try{
+    const res = await axios.put(`${import.meta.env.VITE_API_URL}/item/update`)
+    return res.data.data
+  }catch(e:any){
+    throw e.message
+  }
+})
+
 
 export const getItems = createAsyncThunk('items/list',async ()=>{
   try{
@@ -25,43 +34,48 @@ export const getItems = createAsyncThunk('items/list',async ()=>{
   }
 })
 
+let cloudUrl = ""
+
+const saveToCloud = async (file: Blob) => {
+        
+  const sasToken = import.meta.env.VITE_AZURE_SAS_TOKEN;
+  const containerName = 'items';
+  const storageAccountName = 'wojtekstorage'
+  const fileName = file.name;
+  const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;
+  const blobUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${fileName}`;
+  console.log(uploadUrl);
+
+  try{
+          
+    // get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal
+    const blobService = new BlobServiceClient(uploadUrl);
+    
+    // get Container - full public read access
+    const containerClient: ContainerClient = blobService.getContainerClient(containerName);
+
+    const blobClient = containerClient.getBlockBlobClient(fileName);
+
+    const options = { blobHTTPHeaders: { blobContentType: file.type } };
+
+    await blobClient.uploadData(file, options);
+
+    cloudUrl = blobUrl
+
+  }catch(e:any){
+    console.log(e);
+  }
+}
+
 export const addItem = createAsyncThunk(
   'items/save',
   async (itemData: TItemUpload) => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/item/save`;
     let body = {};
-    console.log(import.meta.env.VITE_AZURE_SAS_TOKEN);
     if(itemData.picture){
-      
-      const sasToken = import.meta.env.VITE_AZURE_SAS_TOKEN;
-      const containerName = 'items';
-      const storageAccountName = 'wojtekstorage'
-      const fileName = itemData.picture.name;
-      const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;
-      const blobUrl = `https://${storageAccountName}.blob.core.windows.net/${containerName}/${fileName}`;
-      console.log(uploadUrl);
-
-      try{
-              
-        // get BlobService = notice `?` is pulled out of sasToken - if created in Azure portal
-        const blobService = new BlobServiceClient(uploadUrl);
-        
-        // get Container - full public read access
-        const containerClient: ContainerClient = blobService.getContainerClient(containerName);
-
-        const blobClient = containerClient.getBlockBlobClient(fileName);
-
-        const options = { blobHTTPHeaders: { blobContentType: itemData.picture.type } };
-
-        await blobClient.uploadData(itemData.picture, options);
-
-      }catch(e:any){
-        console.log(e);
-      }
-      body= {...body,picture: blobUrl}
-
-
-
+      await saveToCloud(itemData.picture)
+      console.log(`url: ${cloudUrl}`)
+      body= {...body,picture: cloudUrl}
     }
     else{
       body = {...body,picture: "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg"}
@@ -118,11 +132,26 @@ export const itemsSlice = createSlice({
     })     
     .addCase(addItem.fulfilled,(state,action)=>{
       state.status = 'success'
+      state.items = [...state.items, action.payload.item]
     })
     .addCase(addItem.pending,(state,action)=>{
       state.status = 'pending'
     })
     .addCase(addItem.rejected,(state,action)=>{
+      state.status = 'failed'
+      state.error = action.error.message
+    }) 
+    .addCase(update.fulfilled,(state,action)=>{
+      state.status = 'success'
+      const items = state.items.map(item=>item as TItem);
+      const index = items.findIndex(item => item.id === action.payload.item.id);
+      items[index] = action.payload.item;
+      state.items = items;
+    })
+    .addCase(update.pending,(state,action)=>{
+      state.status = 'pending'
+    })
+    .addCase(update.rejected,(state,action)=>{
       state.status = 'failed'
       state.error = action.error.message
     }) 

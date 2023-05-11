@@ -16,8 +16,6 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
   const [quantityCart, setQuantityCart] = useState(1);
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const modalRef = useRef(null)
-
-  // const myModal = new bootstrap.Modal(modalRef.current);
   
 
   const handleAddToCart = (e:React.FormEvent<HTMLFormElement>) => {

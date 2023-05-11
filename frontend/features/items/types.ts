@@ -9,6 +9,7 @@ export type TItemsState = {
 }
 
 export type TItem = {
+    id:number,
     name: string,
     description: string,
     price: number,
@@ -24,4 +25,13 @@ export type TItemUpload = {
     price: number,
     picture: Blob | null,
     quantity: number
+}
+
+export type TBody = {
+    name: string,
+    client: User | null,
+    description: string,
+    price: number | null,
+    picture: string | null,
+    quantity: number | null
 }
