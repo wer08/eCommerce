@@ -15,9 +15,15 @@ const initialState: TItemsState = {
   error: null
 }
 
-export const update = createAsyncThunk('items/update', async (item: TItemUpload)=>{
+export const update = createAsyncThunk('items/update', async (item: TItem)=>{
+  console.log("updating")
+  const config = {
+    headers:{
+      'content-type': "application/json"
+    }
+  }
   try{
-    const res = await axios.put(`${import.meta.env.VITE_API_URL}/item/update`)
+    const res = await axios.put(`${import.meta.env.VITE_API_URL}/item/update`,item,config)
     return res.data.data
   }catch(e:any){
     throw e.message
@@ -85,7 +91,7 @@ export const addItem = createAsyncThunk(
       description: itemData.description,
       price: itemData.price,
       quantity: itemData.quantity,
-      client: itemData.user,
+      client: itemData.client,
       ...body
     }
 
@@ -94,7 +100,6 @@ export const addItem = createAsyncThunk(
       headers:{
         'content-type': "application/json"
       }
-
     }
     console.log(body);
     try {

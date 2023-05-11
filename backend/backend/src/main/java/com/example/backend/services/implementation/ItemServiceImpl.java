@@ -6,6 +6,7 @@ import com.example.backend.services.ItemService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,7 +48,11 @@ public class ItemServiceImpl implements ItemService
     public Item update(Item item)
     {
         log.info("Updating item id: {}",item.getId());
-        return itemRepo.save(item);
+        Item itemToUpdate = itemRepo.findById(item.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        BeanUtils.copyProperties(item,itemToUpdate);
+
+        return itemRepo.save(itemToUpdate);
     }
 
     @Override

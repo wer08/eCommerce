@@ -20,7 +20,7 @@ export type TItem = {
 
 export type TItemUpload = {
     name: string,
-    user: User | null,
+    client: User | null,
     description: string,
     price: number,
     picture: Blob | null,

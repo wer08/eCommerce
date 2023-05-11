@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "../cart/cartSlice";
 import { getIsAuthenticated } from "../auth/authSlice";
 import { Link } from "react-router-dom";
+import { update } from "./itemsSlice";
 
 interface Props {
   selectedItem: TItem;
@@ -24,7 +25,10 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
     const form = e.currentTarget
     if(form.checkValidity()){
       const item = { ...selectedItem, quantityCart };
+      const newQuantity = selectedItem.quantity - quantityCart;
+      const itemToUpdate = {...selectedItem, quantity: newQuantity}
       dispatch(addItem(item));
+      dispatch(update(itemToUpdate))
 
     }
     else{
@@ -34,7 +38,6 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
     }
     form.classList.add('was-validated')
     setQuantityCart(1);
-
   };
 
   return (
