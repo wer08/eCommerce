@@ -105,6 +105,7 @@ const Editing: React.FC<Props> = ({selectedItem, setIsEditing}) => {
                     type="button"
                     className="btn btn-primary w-100 mt-3"
                     onClick={()=>handleClick()}
+                    data-bs-dismiss="modal"
                     >
                     Save changes
                 </button>
