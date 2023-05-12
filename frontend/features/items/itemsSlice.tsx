@@ -41,6 +41,14 @@ export const getItems = createAsyncThunk('items/list',async ()=>{
   }
 })
 
+export const deleteItem = createAsyncThunk('items/delete', async (item: TItem)=>{
+  try{
+    await axios.delete(`${import.meta.env.VITE_API_URL}/item/delete/${item.id}`)
+  }catch(error:any){
+    throw error.message
+  }
+})
+
 // export const changeActive = createAsyncThunk('items/active',async (id: number)=>{
 //   try{
 //     const res = await axios.put(`${import.meta.env.VITE_API_URL}/item/active/${id}`)
@@ -156,6 +164,7 @@ export const itemsSlice = createSlice({
     .addCase(addItem.fulfilled,(state,action)=>{
       state.status = 'success'
       state.items = [...state.items, action.payload.item]
+      state.filteredItems = [...state.items, action.payload.item]
     })
     .addCase(addItem.pending,(state,action)=>{
       state.status = 'pending'
@@ -179,21 +188,17 @@ export const itemsSlice = createSlice({
       state.status = 'failed'
       state.error = action.error.message
     }) 
-    // .addCase(changeActive.fulfilled,(state,action)=>{
-    //   state.status = 'success'
-    //   const items = state.items.map(item=>item as TItem);
-    //   const index = items.findIndex(item => item.id === action.meta.arg);
-    //   items[index].isActive = !(items[index].isActive);
-    //   state.items = items;
-    //   state.filteredItems = items;
-    // })
-    // .addCase(changeActive.pending,(state,action)=>{
-    //   state.status = 'pending'
-    // })
-    // .addCase(changeActive.rejected,(state,action)=>{
-    //   state.status = 'failed'
-    //   state.error = action.error.message
-    // }) 
+    .addCase(deleteItem.fulfilled,(state,action)=>{
+      state.status = 'success';
+    })
+    .addCase(deleteItem.pending,(state,action)=>{
+      state.status = 'pending'
+    })
+    .addCase(deleteItem.rejected,(state,action)=>{
+      state.status = 'failed'
+      state.error = action.error.message
+    })  
+    
     
   },
 })

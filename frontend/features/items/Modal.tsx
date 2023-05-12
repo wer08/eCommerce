@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "../cart/cartSlice";
-import { getIsAuthenticated } from "../auth/authSlice";
+import { getIsAuthenticated, getUser } from "../auth/authSlice";
 import { Link } from "react-router-dom";
-import { update } from "./itemsSlice";
+import { deleteItem, getItems, update } from "./itemsSlice";
+import { selectUser } from "../users/usersSlice";
 
 interface Props {
   selectedItem: TItem;
@@ -15,8 +16,9 @@ interface Props {
 const Modal: React.FC<Props> = ({ selectedItem }) => {
   const dispatch = useAppDispatch();
   const [quantityCart, setQuantityCart] = useState(1);
-  const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const modalRef = useRef(null)
+  const isAuthenticated = useAppSelector(getIsAuthenticated);
+  const modalRef = useRef(null);
+  const user = useAppSelector(getUser);
   
 
   const handleAddToCart = (e:React.FormEvent<HTMLFormElement>) => {
@@ -29,19 +31,25 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
       const itemToUpdate = {...selectedItem, quantity: newQuantity}
       dispatch(addItem(item));
       dispatch(update(itemToUpdate))
-      // if(newQuantity === 0){
-      //   dispatch(changeActive(itemToUpdate.id))
-      // }
+
 
     }
     else{
-        console.log('valid')
         e.preventDefault();
         e.stopPropagation();
     }
     form.classList.add('was-validated')
     setQuantityCart(1);
   };
+
+  const handleEdit = () => {
+
+  }
+
+  const handleDelete = async () => {
+    await dispatch(deleteItem(selectedItem))
+    await dispatch(getItems())
+  }
 
   return (
     <div
@@ -84,6 +92,13 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                           Select correct quantity
                         </div>
                       </div>
+                      {user?.id === selectedItem.client.id &&
+                        <>
+                          <button className="btn btn-secondary w-100 mb-1" type="button" onClick={()=>handleEdit()}>Edit</button>
+                          <button className="btn btn-danger w-100 mb-1" data-bs-dismiss="modal" type="button" onClick={()=>handleDelete()}>Delete</button>
+                        </>
+                      }
+
                       <button
                         type="submit"
                         className="btn btn-primary w-100 mb-3"
