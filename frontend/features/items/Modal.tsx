@@ -114,21 +114,24 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                           Select correct quantity
                         </div>
                       </div>
-                      {user?.id === selectedItem.client.id &&
+                      {user?.id === selectedItem.client.id ?
                         <>
                           <button className="btn btn-secondary w-100 mb-1" type="button" onClick={()=>handleEdit()}>Edit</button>
                           <button className="btn btn-danger w-100 mb-1" data-bs-dismiss="modal" type="button" onClick={()=>handleDelete()}>Delete</button>
                         </>
+                        :
+                        <button
+                          type="submit"
+                          className="btn btn-primary w-100 mb-3"
+                          data-bs-dismiss="modal"
+                        >
+                          <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                          Add to cart
+                        </button>
+
                       }
 
-                      <button
-                        type="submit"
-                        className="btn btn-primary w-100 mb-3"
-                        data-bs-dismiss="modal"
-                      >
-                        <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-                        Add to cart
-                      </button>
+
                     </form>
                   </> :
                 <Link to= "/login"><h5 className="text-decoration-none" data-bs-dismiss="modal">Sign In to buy !</h5></Link>

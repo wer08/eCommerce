@@ -51,6 +51,9 @@ const Navbar = () => {
                 <li className="nav_item">
                     <Link className="nav-link click" to="/addItem">Add</Link>
                 </li>
+                <li className="nav_item">
+                    <Link className="nav-link click" to="/myItems">MyItems</Link>
+                </li>
             </>
 
         )
