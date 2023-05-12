@@ -56,6 +56,9 @@ public class ItemServiceImpl implements ItemService
         if(itemToUpdate.getQuantity() == 0){
             itemToUpdate.setActive(false);
         }
+        else{
+            itemToUpdate.setActive(true);
+        }
 
         return itemRepo.save(itemToUpdate);
     }
