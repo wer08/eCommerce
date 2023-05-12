@@ -10,6 +10,7 @@ import { deleteItem, getItems, update } from "./itemsSlice";
 import { selectUser } from "../users/usersSlice";
 import { confirmAlert } from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import Editing from './Editing'
 
 interface Props {
   selectedItem: TItem;
@@ -18,6 +19,7 @@ interface Props {
 const Modal: React.FC<Props> = ({ selectedItem }) => {
   const dispatch = useAppDispatch();
   const [quantityCart, setQuantityCart] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
   const modalRef = useRef(null);
   const user = useAppSelector(getUser);
@@ -45,6 +47,7 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
   };
 
   const handleEdit = () => {
+    setIsEditing(true);
 
   }
 
@@ -82,8 +85,9 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content  justify-content-center">
           <div className="modal-body">
-            <div className="row ">
-                <h5 className="font-weight-bold">{selectedItem.name}</h5>
+            <div className="row ">{isEditing ? <Editing selectedItem = {selectedItem} setIsEditing = {setIsEditing}/>:
+            <>
+                          <h5 className="font-weight-bold">{selectedItem.name}</h5>
                 <img
                 className="card-img-left modal-image"
                 src={selectedItem.picture}
@@ -129,6 +133,8 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
                   </> :
                 <Link to= "/login"><h5 className="text-decoration-none" data-bs-dismiss="modal">Sign In to buy !</h5></Link>
                 }
+            </> }
+  
 
               
             </div>
