@@ -63,18 +63,18 @@ public class ItemResource
         );
     }
 
-    @PutMapping("/active")
-    public ResponseEntity<Response> changeActiveItem(@RequestBody @Valid Item item){
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(of("activityChanged",itemService.changeActive(item)))
-                        .message("Activity changed")
-                        .status(OK)
-                        .statusCode(OK.value())
-                        .build()
-        );
-    }
+//    @PutMapping("/active/{id}")
+//    public ResponseEntity<Response> changeActiveItem(@PathVariable Long id){
+//        return ResponseEntity.ok(
+//                Response.builder()
+//                        .timeStamp(now())
+//                        .data(of("activityChanged",itemService.changeActive(id)))
+//                        .message("Activity changed")
+//                        .status(OK)
+//                        .statusCode(OK.value())
+//                        .build()
+//        );
+//    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Response> getItem(@PathVariable("id") Long id){

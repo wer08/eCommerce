@@ -11,5 +11,5 @@ public interface ItemService
     Item get(Long id);
     Item update(Item item);
     Boolean delete(Long id);
-    Boolean changeActive(Item item);
+//    Boolean changeActive(Long id);
 }

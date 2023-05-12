@@ -29,6 +29,9 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
       const itemToUpdate = {...selectedItem, quantity: newQuantity}
       dispatch(addItem(item));
       dispatch(update(itemToUpdate))
+      // if(newQuantity === 0){
+      //   dispatch(changeActive(itemToUpdate.id))
+      // }
 
     }
     else{

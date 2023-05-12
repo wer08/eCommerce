@@ -28,7 +28,7 @@ export type TItem = {
     client: User,
     quantity: number,
     category: Category,
-    isActive: Boolean
+    active: Boolean
 }
 
 export type TItemUpload = {

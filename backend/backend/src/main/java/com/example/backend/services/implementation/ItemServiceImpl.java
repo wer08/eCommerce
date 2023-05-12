@@ -53,6 +53,9 @@ public class ItemServiceImpl implements ItemService
         Item itemToUpdate = itemRepo.findById(item.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         BeanUtils.copyProperties(item,itemToUpdate);
+        if(itemToUpdate.getQuantity() == 0){
+            itemToUpdate.setActive(false);
+        }
 
         return itemRepo.save(itemToUpdate);
     }
@@ -65,16 +68,16 @@ public class ItemServiceImpl implements ItemService
         return TRUE;
     }
 
-    @Override
-    public Boolean changeActive(Item item)
-    {
-
-        log.info("change activity of item id: {}",item.getId());
-        Item itemToUpdate = itemRepo.findById(item.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        itemToUpdate.setActive(!itemToUpdate.isActive());
-        itemRepo.save(itemToUpdate);
-
-        return true;
-    }
+//    @Override
+//    public Boolean changeActive(Long id)
+//    {
+//
+//        log.info("change activity of item id: {}",id);
+//        Item itemToUpdate = itemRepo.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+//        itemToUpdate.setActive(!itemToUpdate.isActive());
+//        itemRepo.save(itemToUpdate);
+//
+//        return itemToUpdate.isActive();
+//    }
 }

@@ -17,7 +17,7 @@ const initialState: TItemsState = {
 }
 
 export const update = createAsyncThunk('items/update', async (item: TItem)=>{
-  console.log("updating")
+
   const config = {
     headers:{
       'content-type': "application/json"
@@ -40,6 +40,15 @@ export const getItems = createAsyncThunk('items/list',async ()=>{
     throw error.message
   }
 })
+
+// export const changeActive = createAsyncThunk('items/active',async (id: number)=>{
+//   try{
+//     const res = await axios.put(`${import.meta.env.VITE_API_URL}/item/active/${id}`)
+//     return res.data.data
+//   }catch(error:any){
+//     throw error.message
+//   }
+// })
 
 let cloudUrl = ""
 
@@ -94,7 +103,7 @@ export const addItem = createAsyncThunk(
       quantity: itemData.quantity,
       client: itemData.client,
       category: itemData.category,
-      isActive: true,
+      active: true,
       ...body
     }
 
@@ -161,6 +170,7 @@ export const itemsSlice = createSlice({
       const index = items.findIndex(item => item.id === action.payload.item.id);
       items[index] = action.payload.item;
       state.items = items;
+      state.filteredItems = items;
     })
     .addCase(update.pending,(state,action)=>{
       state.status = 'pending'
@@ -169,6 +179,21 @@ export const itemsSlice = createSlice({
       state.status = 'failed'
       state.error = action.error.message
     }) 
+    // .addCase(changeActive.fulfilled,(state,action)=>{
+    //   state.status = 'success'
+    //   const items = state.items.map(item=>item as TItem);
+    //   const index = items.findIndex(item => item.id === action.meta.arg);
+    //   items[index].isActive = !(items[index].isActive);
+    //   state.items = items;
+    //   state.filteredItems = items;
+    // })
+    // .addCase(changeActive.pending,(state,action)=>{
+    //   state.status = 'pending'
+    // })
+    // .addCase(changeActive.rejected,(state,action)=>{
+    //   state.status = 'failed'
+    //   state.error = action.error.message
+    // }) 
     
   },
 })

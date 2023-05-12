@@ -34,6 +34,5 @@ public class Item
     @JsonIgnoreProperties({"items","authorities"})
     private Client client;
     private int quantity;
-    @JsonProperty
-    private boolean isActive;
+    private boolean active;
 }
