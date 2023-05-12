@@ -8,6 +8,8 @@ import { getIsAuthenticated, getUser } from "../auth/authSlice";
 import { Link } from "react-router-dom";
 import { deleteItem, getItems, update } from "./itemsSlice";
 import { selectUser } from "../users/usersSlice";
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 interface Props {
   selectedItem: TItem;
@@ -46,9 +48,25 @@ const Modal: React.FC<Props> = ({ selectedItem }) => {
 
   }
 
-  const handleDelete = async () => {
-    await dispatch(deleteItem(selectedItem))
-    await dispatch(getItems())
+  const handleDelete = () => {
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            await dispatch(deleteItem(selectedItem))
+            await dispatch(getItems())
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => console.log("Aborted")
+        }
+      ]
+    });
+
   }
 
   return (
