@@ -128,7 +128,7 @@ const AddItem = () => {
                     <label htmlFor="categoryt" className="form-label">Category:</label>
                     <div className="input-group">
                         <select name="category" value={category} onChange={e=>handleSelect(e)} className="form-control">
-                            {categories.map(category=><option value={category}>{category}</option>)}
+                            {categories.map((category,idx)=><option key={idx} value={category}>{category}</option>)}
                         </select>
                         <div className="invalid-feedback">Please enter a valid category.</div>
                     </div>

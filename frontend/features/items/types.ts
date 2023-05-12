@@ -2,13 +2,13 @@ import { TypedUseSelectorHook } from "react-redux"
 import { User } from "../auth/types"
 
 export enum Category {
-    FURNITURE = 'Furniture',
-    RTV = 'Rtv',
-    AGD = 'Agd',
-    HOME = 'Home',
-    ITEM = 'Item',
-    GROCERY = 'Grocery',
-    NO_CATEGORY = 'No category'
+    FURNITURE = 'FURNITURE',
+    RTV = 'RTV',
+    AGD = 'AGD',
+    HOME = 'HOME',
+    ITEM = 'ITEM',
+    GROCERY = 'GROCERY',
+    NO_CATEGORY = 'NO CATEGORY'
 }
 
 export type TItemsState = {
@@ -26,8 +26,9 @@ export type TItem = {
     price: number,
     picture: string,
     client: User,
-    quantity: number
-    category: Category
+    quantity: number,
+    category: Category,
+    isActive: Boolean
 }
 
 export type TItemUpload = {

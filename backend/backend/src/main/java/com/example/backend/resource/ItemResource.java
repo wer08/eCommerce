@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 import static java.time.LocalDateTime.now;
 import static java.util.Map.of;
 import static org.springframework.http.HttpStatus.OK;
@@ -39,6 +37,7 @@ public class ItemResource
 
     @PostMapping("/save")
     public ResponseEntity<Response> saveItem(@RequestBody @Valid Item item){
+        log.info(item.toString());
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
@@ -58,6 +57,19 @@ public class ItemResource
                         .timeStamp(now())
                         .data(of("item",itemService.update(item)))
                         .message("Item updated")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @PutMapping("/active")
+    public ResponseEntity<Response> changeActiveItem(@RequestBody @Valid Item item){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("activityChanged",itemService.changeActive(item)))
+                        .message("Activity changed")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()

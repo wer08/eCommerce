@@ -64,4 +64,17 @@ public class ItemServiceImpl implements ItemService
         itemRepo.deleteById(id);
         return TRUE;
     }
+
+    @Override
+    public Boolean changeActive(Item item)
+    {
+
+        log.info("change activity of item id: {}",item.getId());
+        Item itemToUpdate = itemRepo.findById(item.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        itemToUpdate.setActive(!itemToUpdate.isActive());
+        itemRepo.save(itemToUpdate);
+
+        return true;
+    }
 }

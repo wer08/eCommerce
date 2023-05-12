@@ -94,6 +94,7 @@ export const addItem = createAsyncThunk(
       quantity: itemData.quantity,
       client: itemData.client,
       category: itemData.category,
+      isActive: true,
       ...body
     }
 
