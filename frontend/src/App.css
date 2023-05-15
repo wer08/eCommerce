@@ -28,3 +28,11 @@
     transform: scale(1.2);
 }
 
+.password::before {
+    content: " ••••••••••••"; /* Display a bullet or any other character you prefer */
+    color: #000;
+  }
+  
+.password:focus {
+outline: none; /* Removes the default focus outline */
+}

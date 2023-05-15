@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { TProfile } from './types';
 import { useAppSelector } from '../../hooks';
 import { getUser } from './authSlice';
+import ProfileUpdating from './ProfileUpdating';
 
 const Profile = () => {
 
@@ -13,6 +14,8 @@ const Profile = () => {
         lastName: "",
         password: ""
     });
+
+    const [editing,setEditing] = useState(false);
 
     const user = useAppSelector(getUser);
 
@@ -31,7 +34,9 @@ const Profile = () => {
     return (
         <div className="card m-3">
         <div className="card-header">Profile Information</div>
-        <div className="card-body d-flex flex-column">
+        <div className="card-body">
+            {editing ? <ProfileUpdating setEditing={setEditing}/> :
+            <>
             <ul className="list-group list-group-flush flex-grow-1">
             <li className="list-group-item">
                 <strong>Email:</strong> {email}
@@ -47,9 +52,12 @@ const Profile = () => {
             </li>
             <li className="list-group-item">
                 <strong>Password:</strong>
-                <input type="password" className="form-control" value={password} disabled />
+                <span className='password'></span>
             </li>
+            <button type='button' className='btn btn-primary' onClick={()=>setEditing(true)}>Edit</button>
             </ul>
+            </>
+            }
         </div>
         </div>
     );
