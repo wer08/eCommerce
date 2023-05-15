@@ -18,7 +18,7 @@ const ItemDetails: React.FC<Props> = ({ item, onClick }) => {
   return (
     <div className="row mb-4 shadow" onClick={onClick}>
         <div className="col p-0">
-        <div className="card">
+        <div className="card itemDetail">
             {item.picture &&(
               <img
                 className="card-img-left listing-image"

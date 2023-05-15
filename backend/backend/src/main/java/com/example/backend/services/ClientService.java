@@ -20,4 +20,6 @@ public interface ClientService
 
     Client get(String token);
 
+    Client update(Client client);
+
 }

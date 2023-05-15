@@ -1,6 +1,7 @@
 package com.example.backend.resource;
 
 
+import com.example.backend.model.Client;
 import com.example.backend.model.Response;
 import com.example.backend.services.implementation.ClientServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,19 @@ public class ClientResource
                         .timeStamp(now())
                         .data(of("users",clientService.list()))
                         .message("Clients retrieved")
+                        .status(OK)
+                        .statusCode(OK.value())
+                        .build()
+        );
+    }
+
+    @PutMapping("update")
+    public ResponseEntity<Response> updateUser(@RequestBody Client client){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(of("user",clientService.update(client)))
+                        .message("Client updated")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()

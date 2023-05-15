@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from "react";
-import { TProfile } from './types';
+import { TProfile } from '../auth/types';
 import { useAppSelector } from '../../hooks';
-import { getUser } from './authSlice';
+import { getUser } from '../auth/authSlice';
 import ProfileUpdating from './ProfileUpdating';
 
 const Profile = () => {
@@ -32,7 +32,7 @@ const Profile = () => {
     },[user])
 
     return (
-        <div className="card m-3">
+        <div className="card text-center m-3 ">
         <div className="card-header">Profile Information</div>
         <div className="card-body">
             {editing ? <ProfileUpdating setEditing={setEditing}/> :

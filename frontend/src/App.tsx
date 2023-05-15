@@ -8,7 +8,7 @@ import SignUp from '../features/auth/SignUp'
 import PasswordForGoogle from '../features/auth/PasswordForGoogle'
 import AddItem from '../features/items/AddItem'
 import MyItems from '../features/items/MyItems'
-import Profile from '../features/auth/Profile'
+import Profile from '../features/users/Profile'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Layout from './hocs/Layout'
 

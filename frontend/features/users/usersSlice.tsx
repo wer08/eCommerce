@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
-import { User } from '../auth/types'
+import { TProfile, User } from '../auth/types'
 
 interface usersState{
   users: User[],
@@ -34,6 +34,20 @@ export const getUser = createAsyncThunk('user/getUser', async (id:number)=>{
   }
 })
 
+export const updateUser = createAsyncThunk('user/update', async(user: User)=>{
+  try{
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+    const res = await axios.put(`${import.meta.env.VITE_API_URL}/user/update`,user,config)
+    return res.data.data;
+  }catch(error:any){
+    throw error.message
+  }
+})
+
 export const usersSlice = createSlice({
   name: 'users',
   // `createSlice` will infer the state type from the `initialState` argument
@@ -42,7 +56,8 @@ export const usersSlice = createSlice({
 
   },
   extraReducers(builder) {
-    builder.addCase(getUsers.fulfilled,(state,action)=>{
+    builder
+    .addCase(getUsers.fulfilled,(state,action)=>{
       state.status = 'success'
       state.users = action.payload.users
     })
@@ -50,6 +65,20 @@ export const usersSlice = createSlice({
       state.status = 'pending'
     })
     .addCase(getUsers.rejected,(state,action)=>{
+      state.status = 'failed'
+      state.error = action.error.message
+    }) 
+    .addCase(updateUser.fulfilled,(state,action)=>{
+      state.status = 'success'
+      const users = state.users.map(user=>user as User);
+      const index = users.findIndex(user => user.id === action.payload.user.id);
+      users[index] = action.payload.user;
+      state.users = users;
+    })
+    .addCase(updateUser.pending,(state,action)=>{
+      state.status = 'pending'
+    })
+    .addCase(updateUser.rejected,(state,action)=>{
       state.status = 'failed'
       state.error = action.error.message
     }) 
