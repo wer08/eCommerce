@@ -88,4 +88,10 @@ export type TResponseFacebook = {
   access_token: string,
   user: User
 }
-
+export type TProfile = {
+  username: string | undefined,
+  email: string | undefined,
+  firstName: string | undefined,
+  lastName: string | undefined,
+  password: string | undefined
+}
