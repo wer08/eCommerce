@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { TProfile } from '../auth/types';
-import { useAppSelector } from '../../hooks';
+import React, { useEffect, useState } from 'react';
+import { ROLE, User } from '../auth/types';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getUser } from '../auth/authSlice';
+import { updateUser } from './usersSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   setEditing: (bool: boolean) => void;
@@ -10,19 +12,55 @@ interface Props {
 const ProfileUpdating: React.FC<Props> = ({ setEditing }) => {
   const user = useAppSelector(getUser);
 
-  const [formData, setFormData] = useState<TProfile>({
-    username: user?.username,
-    email: user?.email,
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    password: user?.password,
+  const [formData, setFormData] = useState<User>({
+    id: 1,
+    username: "",
+    email: "",
+    firstName: "", 
+    lastName: "",
+    password: "",
+    role: ROLE.USER,     
+    enabled: true,
+    accountNonExpired: true,
+    credentialsNonExpired: true,
+    accountNonLocked: true,
+    items: []
+
   });
 
+  useEffect(()=>{
+    if(user){
+        setFormData({
+            id:user.id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            role: user.role,
+            enabled: user.enabled,
+            accountNonExpired: user.accountNonExpired,
+            credentialsNonExpired: user.credentialsNonExpired,
+            accountNonLocked: user.accountNonLocked,
+            items: user.items
+        
+          });
+    }
+
+  },[user])
+
   const { username, email, firstName, lastName, password } = formData;
+
+  const dispatch = useAppDispatch()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleClick = () => {
+    setEditing(false);
+    dispatch(updateUser(formData));
+  }
 
   return (
     <div>
@@ -90,7 +128,7 @@ const ProfileUpdating: React.FC<Props> = ({ setEditing }) => {
         <button
           type="button"
           className="btn btn-primary"
-          onClick={() => setEditing(false)}
+          onClick={() => handleClick()}
         >
           Save edit
         </button>

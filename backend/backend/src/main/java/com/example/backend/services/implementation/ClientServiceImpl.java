@@ -94,6 +94,7 @@ public class ClientServiceImpl implements ClientService
         Client clientToUpdate = clientRepo.findById(client.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         BeanUtils.copyProperties(client,clientToUpdate);
+        clientToUpdate.setPassword(passwordEncoder.encode(client.getPassword()));
 
         return clientRepo.save(clientToUpdate);
     }

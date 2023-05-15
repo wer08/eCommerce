@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class Client implements UserDetails
     private String firstName;
     private String lastName;
     private String password;
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = ALL)
     private List<Item> items;
 

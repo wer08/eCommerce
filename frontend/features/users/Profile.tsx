@@ -4,6 +4,7 @@ import { TProfile } from '../auth/types';
 import { useAppSelector } from '../../hooks';
 import { getUser } from '../auth/authSlice';
 import ProfileUpdating from './ProfileUpdating';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
 
@@ -15,9 +16,15 @@ const Profile = () => {
         password: ""
     });
 
+
     const [editing,setEditing] = useState(false);
 
     const user = useAppSelector(getUser);
+    const navigate  = useNavigate();
+
+    if(!user){
+      navigate('/');
+    }
 
     const {username,email,firstName,lastName,password} = profile;
 

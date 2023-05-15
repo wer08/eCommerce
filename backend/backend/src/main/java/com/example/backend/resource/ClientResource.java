@@ -45,7 +45,7 @@ public class ClientResource
         );
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<Response> updateUser(@RequestBody Client client){
         return ResponseEntity.ok(
                 Response.builder()
