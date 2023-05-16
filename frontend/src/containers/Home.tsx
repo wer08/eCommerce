@@ -11,8 +11,8 @@ import SortMenu from "../../features/items/SortMenu"
 
 const Home = () => {
   const items = useAppSelector(selectFilteredItems);
-  const reversed = [...items].reverse();
-  const activeItems = reversed.filter(item => item.active)
+ 
+  const [activeItems,setActiveItems] = useState<Array<TItem>>([]);
   const dispatch = useAppDispatch();
   const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
 
@@ -24,15 +24,25 @@ const Home = () => {
     dispatch(getItems());
   }, [dispatch]);
 
+  useEffect(()=>{
+    setActiveItems([...items].reverse())
+  },[items])
+
+
   const handleSort = (option:string) => {
     let sortedArray = [...activeItems];
-    if(option === "PriceAscending"){
+    if(option === "priceAscending"){
       sortedArray.sort((a, b) => a.price - b.price);
-    }else if(option === "PriceDescending"){
+    }else if(option === "priceDescending"){
       sortedArray.sort((a, b) => b.price - a.price);
     }else if(option === "name"){
       sortedArray.sort((a, b) => a.name.localeCompare(b.name));
+    }else if(option == "date"){
+      sortedArray.sort((a,b)=> a.date.localeCompare(b.date));
     }
+    console.log(option)
+
+    setActiveItems(sortedArray);
 
   }
 

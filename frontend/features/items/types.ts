@@ -29,6 +29,7 @@ export type TItem = {
     quantity: number,
     category: Category,
     active: Boolean
+    date: string
 }
 
 export type TItemUpload = {
