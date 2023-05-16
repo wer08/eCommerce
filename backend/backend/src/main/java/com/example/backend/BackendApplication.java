@@ -14,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.example.backend.model.Category.*;
 
@@ -30,10 +31,10 @@ public class BackendApplication {
 		return args -> {
 			Client client = new Client(null,"wer08","wojtek@mail.pl");
 			clientRepo.save(client);
-			itemRepo.save(new Item(null, "Random Item 1", "Random Description 1", 4.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", AGD,client,10,true));
-			itemRepo.save(new Item(null, "Random Item 2", "Random Description 2", 19.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceed9412d0-deb3-11ed-b079-577496366379.jpg", ITEM, client,10,true));
-			itemRepo.save(new Item(null, "Random Item 3", "Random Description 3", 150, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", GROCERY,client,5,true));
-			itemRepo.save(new Item(null, "Random Item 4", "Random description 4", 25.50, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", HOME, client,25,true));
+			itemRepo.save(new Item(null, "Random Item 1", "Random Description 1", 4.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", AGD,client,10,true,new Date()));
+			itemRepo.save(new Item(null, "Random Item 2", "Random Description 2", 19.99, "https://wojtekstorage.blob.core.windows.net/items/eCommerceed9412d0-deb3-11ed-b079-577496366379.jpg", ITEM, client,10,true, new Date()));
+			itemRepo.save(new Item(null, "Random Item 3", "Random Description 3", 150, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", GROCERY,client,5,true, new Date()));
+			itemRepo.save(new Item(null, "Random Item 4", "Random description 4", 25.50, "https://wojtekstorage.blob.core.windows.net/items/eCommerceNoPicture06fc1920-de78-11ed-b693-1356169cbdae.jpg", HOME, client,25,true, new Date()));
 		};
 	}
 

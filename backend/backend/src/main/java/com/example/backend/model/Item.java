@@ -1,6 +1,7 @@
 package com.example.backend.model;
 
 
+import com.example.backend.configuration.ItemEntityListener;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +9,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.EAGER;
@@ -17,6 +21,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(ItemEntityListener.class)
 public class Item
 {
 
@@ -35,4 +40,8 @@ public class Item
     private Client client;
     private int quantity;
     private boolean active;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date", nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date date;
 }

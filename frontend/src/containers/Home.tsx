@@ -7,6 +7,7 @@ import Modal from "../../features/items/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSort, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { TItem } from "../../features/items/types";
+import SortMenu from "../../features/items/SortMenu"
 
 const Home = () => {
   const items = useAppSelector(selectFilteredItems);
@@ -23,11 +24,27 @@ const Home = () => {
     dispatch(getItems());
   }, [dispatch]);
 
+  const handleSort = (option:string) => {
+    let sortedArray = [...activeItems];
+    if(option === "PriceAscending"){
+      sortedArray.sort((a, b) => a.price - b.price);
+    }else if(option === "PriceDescending"){
+      sortedArray.sort((a, b) => b.price - a.price);
+    }else if(option === "name"){
+      sortedArray.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+  }
+
+  const handleFilter = () => {
+    console.log("filtering");
+  }
+
 
   return (
     <div className="container mt-5">
       <div className="row row-cols-1 g-4">
-        <span className="d-flex justify-content-center"> <FontAwesomeIcon icon={faSort} /> Sort <FontAwesomeIcon icon={faFilter} className="ms-5"/> Filter </span>
+        <span className="d-flex justify-content-center"> <div className="manageList"><FontAwesomeIcon icon={faSort} /> <SortMenu onSort={handleSort} /> </div><div onClick={handleFilter} className="manageList"><FontAwesomeIcon icon={faFilter} className="ms-5"/> Filter </div> </span>
         {activeItems.map((item, idx) => (
           <div key={idx} className="col item"  data-bs-toggle="modal" data-bs-target="#itemModal">
             

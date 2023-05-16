@@ -20,7 +20,6 @@
 }
 
 .delete{
-
     cursor: pointer;
 }
 .delete:hover{
@@ -35,4 +34,8 @@
   
 .password:focus {
 outline: none; /* Removes the default focus outline */
+}
+
+.manageList {
+    cursor: pointer;
 }
