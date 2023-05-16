@@ -39,3 +39,9 @@ outline: none; /* Removes the default focus outline */
 .manageList {
     cursor: pointer;
 }
+.background{
+    background-color: #eceff1;
+}
+.card-subtitle {
+    word-wrap: break-word;
+  }

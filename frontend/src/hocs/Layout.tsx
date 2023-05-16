@@ -18,9 +18,11 @@ const Layout = ({children}:Props) => {
     },[dispatch])
 
     return ( 
-        <div>
+        <div className="background">
             <Navbar />
+
             {children}
+
         </div>
      );
 }

@@ -1,27 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Category } from '../items/types'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSort, faFilter } from "@fortawesome/free-solid-svg-icons";
 interface Props{
-    onFilter: (value:string) => void
+    onFilter: (options:Array<string>) => void
 }
 
-const Filter:React.FC<Props> = ({ onFilter }) => {
-  const [selectedOption, setSelectedOption] = useState('');
+const FilterMenu:React.FC<Props> = ({ onFilter }) => {
+  const [selectedOptions, setSelectedOptions] = useState<Array<string>>([]);
   const categories = Object.values(Category)
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.currentTarget.value
-    setSelectedOption(value);
-    onFilter(value);
+  const handleFilterChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedValue = e.target.value;
+
+    if (selectedOptions.includes(selectedValue)) {
+      setSelectedOptions(selectedOptions.filter((option) => option !== selectedValue));
+    } else {
+      setSelectedOptions([...selectedOptions, selectedValue]);
+    }
+
   };
+  useEffect(()=>{
+    console.log(selectedOptions)
+    onFilter(selectedOptions);
+  },[selectedOptions])
 
   return (
     <div>
-      <label htmlFor="sort-select">Filter By Category:</label>
-      <select id="sort-select" value={selectedOption} onChange={(e)=>handleFilterChange(e)} className='form-select'>
-      {categories.map((category,idx)=><option key={idx} value={category}>{category}</option>)}
-      </select>
+        <FontAwesomeIcon icon={faFilter} className=""/> 
+        <div className="dropdown">
+            <div className='dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false">Select categories to filter: </div>
+
+            <ul className="dropdown-menu">
+                {categories.map((option,idx) => (
+                <li key={idx}>
+                    <input
+                    type="checkbox"
+                    id={`option-${option}`}
+                    value={option}
+                    checked={selectedOptions.includes(option)}
+                    onChange={(e)=>handleFilterChange(e)}
+                    />
+                    {option}
+                </li>
+                ))}
+            </ul>
+        </div>
     </div>
   );
 };
 
-export default Filter;
+export default FilterMenu;
