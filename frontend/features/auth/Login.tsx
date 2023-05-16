@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"; // Importing useState hook from react
 import { Link, Navigate } from "react-router-dom"; // Importing Link and Navigate components from react-router-dom
-import { getIsAuthenticated, getUser, login} from "./authSlice"; // Importing login action creator from authSlice
+import { getError, getIsAuthenticated, getUser, login} from "./authSlice"; // Importing login action creator from authSlice
 import { useAppDispatch, useAppSelector } from "../../hooks"; // Importing custom hooks
 
 const Login = () => {
@@ -10,6 +10,7 @@ const Login = () => {
         password: ""
     })
     const isAuthenticated = useAppSelector(getIsAuthenticated)
+    const error = useAppSelector(getError)
 
     // Using useAppDispatch hook to create a dispatch function
     const dispatch = useAppDispatch()
@@ -36,7 +37,11 @@ const Login = () => {
     }
 
     // Rendering the login form, along with links to signup and reset password pages
-    return ( 
+    return (
+        <> {error === "Request failed with status code 403" &&
+        <div className="alert alert-danger" role="alert">
+            Wrong username or password
+        </div>}
         <div className="container mt-5 form">
             <h1>Sign In</h1>
             <p>Sign into you account</p>
@@ -56,6 +61,7 @@ const Login = () => {
                 Forgot your password ? <Link to='/reset_password'>Reset Password</Link>
             </p>
         </div>
+        </>
      );
 };
  

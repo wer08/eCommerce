@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
 import axios from 'axios'
 import { TProfile, User } from '../auth/types'
+import { useAppDispatch } from '../../hooks'
+import { logout } from '../auth/authSlice'
 
 interface usersState{
   users: User[],

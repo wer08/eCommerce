@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getUser } from '../auth/authSlice';
 import { updateUser } from './usersSlice';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../auth/authSlice';
 
 interface Props {
   setEditing: (bool: boolean) => void;
@@ -11,6 +12,7 @@ interface Props {
 
 const ProfileUpdating: React.FC<Props> = ({ setEditing }) => {
   const user = useAppSelector(getUser);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<User>({
     id: 1,
@@ -57,9 +59,11 @@ const ProfileUpdating: React.FC<Props> = ({ setEditing }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setEditing(false);
-    dispatch(updateUser(formData));
+    await dispatch(updateUser(formData));
+    navigate('/login');
+    dispatch(logout())
   }
 
   return (
