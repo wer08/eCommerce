@@ -7,7 +7,8 @@ import Modal from "../../features/items/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSort, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { TItem } from "../../features/items/types";
-import SortMenu from "../../features/items/SortMenu"
+import SortMenu from "../../features/items/SortMenu";
+import FilterMenu from '../../features/items/FilterMenu';
 
 const Home = () => {
   const items = useAppSelector(selectFilteredItems);
@@ -40,21 +41,31 @@ const Home = () => {
     }else if(option == "date"){
       sortedArray.sort((a,b)=> a.date.localeCompare(b.date));
     }
-    console.log(option)
 
     setActiveItems(sortedArray);
 
   }
 
-  const handleFilter = () => {
-    console.log("filtering");
+  const handleFilter = (option: string) => {
+    if(option == 'NO CATEGORY'){
+      setActiveItems([...items].reverse());
+      return;
+    }
+
+    const filteredArray = items.filter(item => item.category === option)
+    setActiveItems(filteredArray);
+    
+    
   }
 
 
   return (
     <div className="container mt-5">
       <div className="row row-cols-1 g-4">
-        <span className="d-flex justify-content-center"> <div className="manageList"><FontAwesomeIcon icon={faSort} /> <SortMenu onSort={handleSort} /> </div><div onClick={handleFilter} className="manageList"><FontAwesomeIcon icon={faFilter} className="ms-5"/> Filter </div> </span>
+        <span className="d-flex justify-content-center">
+           <div className="manageList"><FontAwesomeIcon icon={faSort} className="ms-5"/> <SortMenu onSort={handleSort} /> </div>
+           <div className="manageList"><FontAwesomeIcon icon={faFilter} className="ms-5"/> <FilterMenu onFilter={handleFilter}/> </div> 
+           </span>
         {activeItems.map((item, idx) => (
           <div key={idx} className="col item"  data-bs-toggle="modal" data-bs-target="#itemModal">
             
