@@ -17,7 +17,7 @@ const AddItem = () => {
     const [formData, setFormData] = useState<TItemUpload>({
         name: "",
         description: "",
-        price: 0,
+        price: 1.00,
         picture: null,
         client: currentUser,
         quantity: 1,
@@ -33,6 +33,8 @@ const AddItem = () => {
 
     // Define state for form validation
     const [validated, setValidated] = useState(false);
+
+    const [isAdded,setIsAdded] = useState(false);
 
     // Destructure form data properties
     const {name, description, price, picture, client, quantity, category} = formData;
@@ -51,7 +53,11 @@ const AddItem = () => {
         // Set the validated state to true to enable the Bootstrap validation feedback styles
         setValidated(true);
         dispatch(addItem(formData));
-        // navigate("/");
+        setTimeout(()=>{
+            navigate("/");
+        },800)
+        setIsAdded(true);
+
         
     }
 
@@ -90,6 +96,10 @@ const AddItem = () => {
 
     // Render the form
     return ( 
+        <>{isAdded &&
+        <div className="alert alert-success" role="alert">
+            Item added succesfully
+        </div>}
         <div className="container mt-5">
 
             {/* Define the form element */}
@@ -108,7 +118,7 @@ const AddItem = () => {
                     <label htmlFor="price" className="form-label">Price:</label>
                     <div className="input-group">
                         <span className="input-group-text">$</span>
-                        <input type="number" name="price" value={price} onChange={e=>handleChange(e)} className="form-control" min="0.01" required />
+                        <input type="number" name="price" value={price} onChange={e=>handleChange(e)} className="form-control" min="1.00" required />
                         <div className="invalid-feedback">Please enter a valid price.</div>
                     </div>
                 </div>
@@ -153,6 +163,7 @@ const AddItem = () => {
                 </div>
             </form>
         </div>
+        </>
      );
 }
  
